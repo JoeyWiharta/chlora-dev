@@ -109,9 +109,13 @@ const MasterUserAdd = (props) => {
             alignItems: 'center',
             justifyContent: 'space-between',
             pr: 1,
+            borderBottom: '1px solid',
+            borderColor: 'divider'
           }}
         >
-          Add User
+          <Typography variant="h3">
+            Add User
+          </Typography>
 
           <IconButton
             aria-label="close"
@@ -269,7 +273,7 @@ const MasterUserAdd = (props) => {
                     minHeight: '50px',
                     borderRadius: '15px',
                     '&:hover': {
-                      bgcolor:'#61A05A'
+                      bgcolor: '#61A05A'
                     },
                   }}
                 >

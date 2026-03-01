@@ -7,6 +7,7 @@ import MuiOutlinedInput from "./MuiOutlinedInput";
 import MuiDrawer from "./MuiDrawer";
 import MuiSelect from "./MuiSelect";
 import TabOverrides from "./MuiTabOverrides";
+import MuiSvgIcon from "./MuiSvgIcon";
 
 const buildComponents = () => ({
     ...MuiPaper,
@@ -18,6 +19,8 @@ const buildComponents = () => ({
     ...MuiDrawer,
     ...MuiSelect,
     ...TabOverrides,
+    ...MuiSvgIcon,
+    
 });
 
 export default buildComponents;

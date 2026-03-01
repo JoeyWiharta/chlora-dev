@@ -28,15 +28,15 @@ const MenuRoutes = [
             { path: "/app004/master/devices", text: "Master Device", component: LazyLoadRoutes(() => import("../pages/app004/MasterDevice")) },
         ],
     },
-    {
-        text: "Reports",
-        icon: <AssessmentIcon />,
-        section: "main",
-        sub: [
-            { path: "/reports/table", text: "Table Report", icon: mdiChartBoxOutline, component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },
-            { path: "/reports/graph", text: "Graph Report", icon: mdiChartBoxOutline, component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },
-        ],
-    },
+    // {
+    //     text: "Reports",
+    //     icon: <AssessmentIcon />,
+    //     section: "main",
+    //     sub: [
+    //         { path: "/reports/table", text: "Table Report", icon: mdiChartBoxOutline, component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },
+    //         { path: "/reports/graph", text: "Graph Report", icon: mdiChartBoxOutline, component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },
+    //     ],
+    // },
     { text: "Support", path: "/support", icon: <SupportAgentOutlinedIcon />, section: "footer", component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },
     { text: "About", path: "/about", icon: <InfoOutlinedIcon />, section: "footer", component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },
     { text: "About", path: "/about", icon: <InfoOutlinedIcon />, section: "footer", component: LazyLoadRoutes(() => import("../pages/app002/MasterUser")), },

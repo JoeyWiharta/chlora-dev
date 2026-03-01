@@ -42,6 +42,9 @@ const parentButtonSx = (isCollapsed) => ({
         color: "primary.main",
     },
 
+    "&:hover": {
+        color: "text.primary",
+    },
 });
 
 
@@ -138,7 +141,7 @@ const SidebarBody = (props) => {
                                                     sx={{
                                                         color: 'inherit',
                                                         minWidth: "auto",
-                                                        "& svg": { fontSize: 20, }
+                                                        "& svg": { fontSize: "large", }
                                                     }}
                                                 >
                                                     {item.icon}
@@ -161,6 +164,7 @@ const SidebarBody = (props) => {
                                             {isParent && !props.isCollapsed && (
                                                 <ExpandMoreIcon
                                                     sx={{
+                                                        fontSize: '18px',
                                                         transform: props.openMenuIndex === index ? "rotate(180deg)" : "rotate(0deg)",
                                                         transition: "transform 0.3s ease, opacity 0.3s ease",
                                                     }}

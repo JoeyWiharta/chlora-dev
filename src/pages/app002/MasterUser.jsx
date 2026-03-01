@@ -191,7 +191,6 @@ const MasterUser = () => {
             sort: true,
             headerAlign: "center",
             bodyAlign: "center",
-            minWidth: '100px',
         },
         {
             dataField: "name",
@@ -199,7 +198,6 @@ const MasterUser = () => {
             sort: true,
             headerAlign: "center",
             bodyAlign: "center",
-            minWidth: '100px',
         },
         {
             dataField: "role",
@@ -207,7 +205,6 @@ const MasterUser = () => {
             sort: true,
             headerAlign: "center",
             bodyAlign: "center",
-            minWidth: '100px',
         },
         {
             dataField: "email",
@@ -215,13 +212,11 @@ const MasterUser = () => {
             sort: true,
             headerAlign: "center",
             bodyAlign: "center",
-            minWidth: '100px',
         },
         {
             dataField: "action",
             text: "Action",
             headerAlign: "center",
-            minWidth: '150px',
             formatter: (cellContent, app002UserDeletedData) => (
                 <>
                     <Stack direction="row" spacing={1} justifyContent="center">
@@ -542,7 +537,7 @@ const MasterUser = () => {
                 msgStateGetStatus={app002MsgStatus}
                 setFirstRender={setFirstRender}
                 title="Users Management"
-                icon={<PersonIcon fontSize="small" />}
+                icon={<PersonIcon fontSize="medium"/>}
                 breadCrumbItems={breadCrumbItems}
                 isMobile={isMobile}
             >
@@ -556,7 +551,6 @@ const MasterUser = () => {
                     sx={{ overflow: "hidden", borderTopRightRadius: '0px', borderTopLeftRadius: isMobile ? "0px" : "10px" }}
                 >
 
-
                     <Box display={"flex"} flexDirection={"column"} gap={2} py={1} px={2}>
                         <Stack>
                             <Tabs
@@ -567,13 +561,13 @@ const MasterUser = () => {
                                 allowScrollButtonsMobile
                             >
                                 <Tab label="Active User"
-                                    icon={<HowToRegIcon fontSize="small" />}
+                                    icon={<HowToRegIcon />}
                                     iconPosition="start"
                                     value="activeUser"
                                 />
                                 <Tab label="Deleted User"
                                     value="deletedUser"
-                                    icon={<PersonRemoveOutlinedIcon fontSize="small" />}
+                                    icon={<PersonRemoveOutlinedIcon />}
                                     iconPosition="start"
                                 />
                             </Tabs>
@@ -581,7 +575,7 @@ const MasterUser = () => {
 
                         <Stack>
                             <Grid container spacing={2} alignItems="center">
-                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                                     <TextField
                                         fullWidth
                                         placeholder="Search"
@@ -607,7 +601,7 @@ const MasterUser = () => {
                                     />
                                 </Grid>
 
-                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
                                     <Select
                                         fullWidth
                                         size="small"
@@ -640,6 +634,7 @@ const MasterUser = () => {
                                             onClick={handleModalAddOpen}
                                             fullWidth={isMobile ? true : false}
                                             startIcon={<AddIcon fontSize="small" />}
+                                            sx={{ px: !isMobile ? 4 : 0 }}
                                         >
                                             Add
                                         </Button>

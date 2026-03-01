@@ -23,10 +23,13 @@ import {
     mdiMenuDown,
 } from '@mdi/js';
 import {
+    ArrowDownwardIcon,
+    ArrowUpwardIcon,
     FirstPageOutlinedIcon,
     LastPageOutlinedIcon,
     NavigateBeforeOutlinedIcon,
     NavigateNextOutlinedIcon,
+    UnfoldMoreIcon,
 
 } from "../../assets/Icon/muiIcon";
 import { useTheme } from "@mui/material/styles";
@@ -140,6 +143,7 @@ const TableCustom = (props) => {
                     <Box display={"flex"} alignItems={"center"} justifyContent={column.headerAlign ? column.headerAlign : "center"}
                         onClick={() => handleRequestSort(null, column.dataField)}
                         sx={{ cursor: 'pointer' }}
+                        gap={1}
                     >
                         <Typography variant="body1" fontWeight="medium">
                             {column.text}
@@ -151,16 +155,15 @@ const TableCustom = (props) => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
-                            ml: 0.5
                         }}>
                             {sortField === column.dataField ? (
                                 sortOrder === 'asc' ? (
-                                    <Icon path={mdiMenuUp} size={1} />
+                                    <ArrowUpwardIcon sx={{ fontSize: '14px' }} />
                                 ) : (
-                                    <Icon path={mdiMenuDown} size={1} />
+                                    <ArrowDownwardIcon sx={{ fontSize: '14px' }} />
                                 )
                             ) : (
-                                <Icon path={mdiMenuSwap} size={1} />
+                                <UnfoldMoreIcon sx={{ fontSize: '14px' }} />
                             )}
                         </Box>
                     </Box>
@@ -231,8 +234,8 @@ const TableCustom = (props) => {
         color: 'text.secondary',
         backgroundColor: 'background.paper',
         transition: 'all 0.2s ease',
-        width: { xs: 28, sm: 28, md: 36 },
-        height: { xs: 28, sm: 28, md: 36 },
+        width: { xs: 26, sm: 26, md: 30 },
+        height: { xs: 26, sm: 26, md: 30 },
         '&:hover:not(.Mui-disabled)': {
             backgroundColor: 'action.hover',
             borderColor: 'primary.main',

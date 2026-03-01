@@ -21,7 +21,7 @@ import MasterClusterAdd from "./MasterClusterAdd";
 import MasterClusterEdit from "./MasterClusterEdit";
 import PopupDeleteAndRestore from "../../components/common/PopupDeleteAndRestore";
 import { Trash2, SquarePen, Plus, Search, RotateCcw } from "lucide-react";
-import { AddIcon, PersonIcon, SearchIcon } from "../../assets/Icon/muiIcon";
+import { AddIcon, DeviceHubIcon, SearchIcon } from "../../assets/Icon/muiIcon";
 
 const MasterCluster = () => {
     // State First Page, Message, and Loading Effect
@@ -246,7 +246,7 @@ const MasterCluster = () => {
                 msgStateGetStatus={app003MsgStatus}
                 setFirstRender={setFirstRender}
                 title="Clusters Management"
-                icon={<PersonIcon fontSize="small" />}
+                icon={<DeviceHubIcon fontSize="medium" />}
                 breadCrumbItems={breadCrumbItems}
                 isMobile={isMobile}
             >
@@ -261,7 +261,7 @@ const MasterCluster = () => {
                     <Box display={"flex"} flexDirection={"column"} gap={2} px={2} py={3}>
                         <Stack>
                             <Grid container spacing={2} alignItems={"center"}>
-                                <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Grid size={{ xs: 12, sm: 12, md: 3 }}>
                                     <TextField
                                         fullWidth
                                         placeholder="Search"
@@ -294,6 +294,7 @@ const MasterCluster = () => {
                                         onClick={handleModalAddOpen}
                                         fullWidth={isMobile ? true : false}
                                         startIcon={<AddIcon fontSize="small" />}
+                                        sx={{ px: !isMobile ? 4 : 0 }}
                                     >
                                         Add
                                     </Button>

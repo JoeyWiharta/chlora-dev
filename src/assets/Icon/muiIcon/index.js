@@ -33,4 +33,9 @@ export { default as KeyboardDoubleArrowRightIcon } from '@mui/icons-material/Key
 export { default as LastPageOutlinedIcon } from '@mui/icons-material/LastPageOutlined';
 export { default as NavigateNextOutlinedIcon } from '@mui/icons-material/NavigateNextOutlined';
 export { default as NavigateBeforeOutlinedIcon } from '@mui/icons-material/NavigateBeforeOutlined';
-
+export { default as MemoryIcon } from '@mui/icons-material/Memory';
+export { default as DeviceHubIcon } from '@mui/icons-material/DeviceHub';
+export { default as UnfoldMoreIcon } from '@mui/icons-material/UnfoldMore';
+export { default as ArrowUpwardIcon } from '@mui/icons-material/ArrowUpward';
+export { default as ArrowDownwardIcon } from '@mui/icons-material/ArrowDownward';
+export { default as SwapVertIcon } from '@mui/icons-material/SwapVert';

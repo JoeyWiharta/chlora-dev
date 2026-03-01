@@ -23,7 +23,7 @@ import PopupDeleteAndRestore from "../../components/common/PopupDeleteAndRestore
 import { Trash2, SquarePen, Plus, Search, RotateCcw } from "lucide-react";
 import MasterDeviceAdd from "./MasterDeviceAdd";
 import MasterDeviceEdit from "./MasterDeviceEdit";
-import { AddIcon, PersonIcon, SearchIcon } from "../../assets/Icon/muiIcon";
+import { AddIcon, MemoryIcon, SearchIcon } from "../../assets/Icon/muiIcon";
 
 const MasterDevice = () => {
     // State First Page, Message, and Loading Effect
@@ -339,7 +339,7 @@ const MasterDevice = () => {
                 msgStateGetStatus={app004MsgStatus}
                 setFirstRender={setFirstRender}
                 title="Devices Management"
-                icon={<PersonIcon fontSize="small" />}
+                icon={<MemoryIcon fontSize="medium" />}
                 breadCrumbItems={breadCrumbItems}
                 isMobile={isMobile}
             >
@@ -430,6 +430,7 @@ const MasterDevice = () => {
                                         onClick={handleModalAddOpen}
                                         fullWidth={isMobile ? true : false}
                                         startIcon={<AddIcon fontSize="small" />}
+                                        sx={{ px: !isMobile ? 4 : 0 }}
                                     >
                                         Add
                                     </Button>
