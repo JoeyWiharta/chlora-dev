@@ -2,7 +2,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import PropTypes from "prop-types";
 // import Sidebar from "../components/layoutComponent/Sidebar/Sidebar";
 import Header from "../components/layoutComponent/Header/Header";
-import { ArrowBackIosIcon, ArrowForwardIosIcon } from "../assets/Icon/muiIcon/index";
 import Footer from "../components/layoutComponent/Footer";
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
@@ -42,16 +41,18 @@ const AuthLayout = (props) => {
     //     setMobileOpen(false);
     // };
 
+    debugger
     const userData = useMemo(() => {
         const data = localStorage.getItem("user");
         return data ? JSON.parse(data) : null;
     }, []);
+    console.log(userData)
 
     // const drawerWidth = isCollapsed ? SIDEBAR_COLLAPSE_WIDTH : SIDEBAR_WIDTH;
 
     return (
         <SidebarProvider>
-            <AppSidebar />
+            <AppSidebar userData={userData} />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
