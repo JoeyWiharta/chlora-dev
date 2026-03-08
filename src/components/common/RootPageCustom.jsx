@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { Container, Box, Paper, Stack, Typography } from "@mui/material";
 import AlertMessage from "./AlertMessage";
-import BreadCrumb from "./BreadCrumb";
+import BreadCrumb from "./BreadcrumbCustom";
 
 const RootPageCustom = (props) => {
     useEffect(() => {

@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
 import MenuRoutes from "@/routes/MenuRoutes"
 import { ChevronRight } from "lucide-react"
@@ -17,13 +17,37 @@ import {
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
+    useSidebar
 } from "@/components/ui/sidebar"
 
 const AppSidebarContent = () => {
     const mainMenu = MenuRoutes.filter(menu => menu.section == "main")
     const otherMenu = MenuRoutes.filter(menu => menu.section == "others")
     const location = useLocation()
-    const [openMenu, setOpenMenu] = useState(null)
+    const { state } = useSidebar()
+    const isCollapsed = state === "collapsed"
+
+
+
+    const getActiveParent = () => {
+        const active = MenuRoutes.find(menu =>
+            menu?.sub?.some(sub => sub.path === location.pathname)
+        )
+        return active?.title || null
+    }
+    const [openMenu, setOpenMenu] = useState(getActiveParent)
+
+
+    useEffect(() => {
+        const active = MenuRoutes.find(menu =>
+            menu?.sub?.some(sub => sub.path === location.pathname)
+        )
+        if (active) setOpenMenu(active.title)
+    }, [location.pathname])
+
+    useEffect(() => {
+        setOpenMenu(getActiveParent())
+    }, [state])
 
     return (
         <>
@@ -41,7 +65,10 @@ const AppSidebarContent = () => {
                             >
                                 <SidebarMenuItem>
                                     <CollapsibleTrigger asChild>
-                                        <SidebarMenuButton tooltip={item.title}>
+                                        <SidebarMenuButton
+                                            tooltip={item.title}
+                                            isActive={isCollapsed && item?.sub?.some(sub => sub.path === location.pathname)}
+                                        >
                                             {item.icon && <item.icon />}
                                             <span>{item.title}</span>
                                             <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -86,22 +113,24 @@ const AppSidebarContent = () => {
 
             <SidebarGroup>
                 <SidebarGroupLabel>Others</SidebarGroupLabel>
-                {otherMenu.map((item) => {
-                    return (
-                        <SidebarMenuItem key={item.path}>
-                            <SidebarMenuButton
-                                asChild
-                                tooltip={item.title}
-                                isActive={location.pathname === item.path}
-                            >
-                                <Link to={item.path}>
-                                    {item.icon && <item.icon />}
-                                    <span>{item.title}</span>
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    )
-                })}
+                <SidebarMenu>
+                    {otherMenu.map((item) => {
+                        return (
+                            <SidebarMenuItem key={item.path}>
+                                <SidebarMenuButton
+                                    asChild
+                                    tooltip={item.title}
+                                    isActive={location.pathname === item.path}
+                                >
+                                    <Link to={item.path}>
+                                        {item.icon && <item.icon />}
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        )
+                    })}
+                </SidebarMenu>
             </SidebarGroup>
         </>
     )

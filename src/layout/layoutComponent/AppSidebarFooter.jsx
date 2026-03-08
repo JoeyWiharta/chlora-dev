@@ -35,12 +35,15 @@ import {
 } from "@/components/ui/sidebar"
 import { useThemeMode } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext"
+import { useState } from "react"
 
 const AppSidebarFooter = (props) => {
     const { mode, setMode } = useThemeMode();
-    const {logout} = useAuth()
-
+    const { logout } = useAuth()
     const { isMobile } = useSidebar()
+    const [roleUser, setRoleUser] = useState(props.userData?.role || "")
+    const [nameUser, setNameUser] = useState(props.userData?.name || "")
+
     const initialName = (name) => {
         if (name) {
             const words = name.trim().split(" ").filter(Boolean);
@@ -56,6 +59,11 @@ const AppSidebarFooter = (props) => {
         }
     };
 
+    const formatRole = (role) => {
+        if (!role) return ""
+        return role.charAt(0).toUpperCase() + role.slice(1).toLowerCase()
+    }
+
 
 
 
@@ -64,13 +72,15 @@ const AppSidebarFooter = (props) => {
             <SidebarMenuItem>
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                        <SidebarMenuButton size="lg"
+                            className="data-[active=true]:!bg-sidebar-accent data-[active=true]:!text-sidebar-foreground data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                        >
                             <Avatar className="h-8 w-8 rounded-lg">
-                                <AvatarFallback className="rounded-lg">{initialName(props.userData.username)}</AvatarFallback>
+                                <AvatarFallback className="rounded-lg">{initialName(nameUser)}</AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-medium">{props.userData.username}</span>
-                                <span className="truncate text-xs">{props.userData.role}</span>
+                                <span className="truncate font-medium">{nameUser}</span>
+                                <span className="truncate text-xs">{formatRole(roleUser)}</span>
                             </div>
                             <ChevronsUpDown className="ml-auto size-4" />
                         </SidebarMenuButton>
@@ -85,11 +95,11 @@ const AppSidebarFooter = (props) => {
                         <DropdownMenuLabel className="p-0 font-normal">
                             <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                                 <Avatar className="h-8 w-8 rounded-lg">
-                                    <AvatarFallback className="rounded-lg">{initialName(props.userData.username)}</AvatarFallback>
+                                    <AvatarFallback className="rounded-lg">{initialName(nameUser)}</AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">{props.userData.username}</span>
-                                    <span className="truncate text-xs">{props.userData.role}</span>
+                                    <span className="truncate font-medium">{nameUser}</span>
+                                    <span className="truncate text-xs">{formatRole(roleUser)}</span>
                                 </div>
                             </div>
                         </DropdownMenuLabel>

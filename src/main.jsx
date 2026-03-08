@@ -5,14 +5,20 @@ import App from "../src/App"
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProviderCustom } from './context/ThemeContext';
 import "./index.css"
+import { ToasterCustom } from './components/common/ToasterCustom';
+import SmallIcon from "./assets/images/SmallIcon.png"
 
-const basename = import.meta.env.DEV ? "/chlora" : "/chlora"
+const link = document.querySelector("link[rel='icon']")
+link.href = SmallIcon
+
+const basename = import.meta.env.DEV ? "/chlora/" : "/chlora/"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter basename={basename}>
       <AuthProvider>
-        <ThemeProviderCustom>   {/* ✅ WAJIB */}
+        <ThemeProviderCustom>
+          <ToasterCustom />
           <App />
         </ThemeProviderCustom>
       </AuthProvider>

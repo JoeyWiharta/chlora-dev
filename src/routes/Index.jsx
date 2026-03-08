@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import MenuRoutes from './MenuRoutes';
 import LoginForm from "../pages/Authentication/LoginForm";
-import Register from "../pages/Authentication/Register";
+import RegisterForm from "../pages/Authentication/RegisterForm";
 
 const mappingMenuRoutes = (items) => items.flatMap(item => {
     if (item.sub) {
@@ -21,7 +21,7 @@ const authProtectedRoutes = [
 
 const publicRoutes = [
     { path: "/login", component: <LoginForm /> },
-    { path: "/register", component: <Register /> },
+    { path: "/register", component: <RegisterForm /> },
 ]
 
 export { authProtectedRoutes, publicRoutes }

@@ -6,6 +6,8 @@ import Footer from "../components/layoutComponent/Footer";
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import AppSidebar from "./layoutComponent/AppSidebar";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
+import BreadcrumbCustom from "@/components/common/BreadcrumbCustom";
 
 // Migrate to Shadcn and Tailwind
 // import { IconButton, Box, useTheme, useMediaQuery, Backdrop, Drawer, Typography } from "@mui/material";
@@ -60,9 +62,13 @@ const AuthLayout = (props) => {
                             orientation="vertical"
                             className="mr-2 data-[orientation=vertical]:h-4"
                         />
+                       <BreadcrumbCustom/>
                     </div>
                 </header>
             </SidebarInset>
+
+          
+            
         </SidebarProvider>
 
 
