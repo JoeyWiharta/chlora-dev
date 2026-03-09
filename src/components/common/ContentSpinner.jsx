@@ -1,31 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, CircularProgress, Typography } from '@mui/material';
+import { Spinner } from '../ui/spinner';
 
 const ContentSpinner = (props) => {
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column',
-                minHeight: '80vh',
-                width: '100%',
-                backgroundColor: 'background.default',
-            }}
-        >
-            <CircularProgress
-                sx={{
-                    color: 'text.secondary',
-                    marginBottom: 2,
-                }}
-                size={50}
-            />
-            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-                {props.text}
-            </Typography>
-        </Box>
+        <div className={`flex flex-col items-center justify-center gap-3 w-full h-full`}>
+            <Spinner className="size-8" />
+            {props.text && (
+                <span className="text-sm text-muted-foreground">
+                    {props.text}
+                </span>
+            )}
+        </div>
     );
 };
 

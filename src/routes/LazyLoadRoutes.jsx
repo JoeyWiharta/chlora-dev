@@ -6,10 +6,7 @@ const LazyLoadRoutes = (importFunc) => {
 
     return (
         <Suspense
-            fallback=
-            {
-                <ContentSpinner text='Loading...' />
-            }
+            fallback={<ContentSpinner text='Loading...' />}
         >
             <LazyElement />
         </Suspense >

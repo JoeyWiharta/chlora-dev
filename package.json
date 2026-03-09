@@ -21,6 +21,7 @@
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
     "@tailwindcss/vite": "^4.2.1",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.1",
     "bootstrap": "^5.3.8",
     "class-variance-authority": "^0.7.1",

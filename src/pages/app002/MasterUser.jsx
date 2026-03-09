@@ -1,49 +1,28 @@
-import React, { useState, useEffect, useCallback, act } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import RootPageCustom from "../../components/common/RootPageCustom";
 import TableCustom from "../../components/common/TableCustom";
 import { getUser, deleteUser, getUserDeleted, restoreUser } from "../../utils/ListApi";
 import MasterUserAdd from "./MasterUserAdd";
 import MasterUserEdit from "./MasterUserEdit";
 import PopupDeleteAndRestore from "../../components/common/PopupDeleteAndRestore";
-import {
-    Container,
-    Typography,
-    Grid,
-    TextField,
-    IconButton,
-    Stack,
-    Tooltip,
-    // Button,
-    Tab,
-    Tabs,
-    Paper,
-    MenuItem,
-    Select,
-    useTheme,
-    useMediaQuery,
-    Box
-} from "@mui/material";
-import {
-    AddIcon,
-    DeleteOutlinedIcon,
-    EditOutlinedIcon,
-    HowToRegIcon,
-    PersonIcon,
-    PersonRemoveOutlinedIcon,
-    ReplayOutlinedIcon,
-    SearchIcon
-} from "../../assets/Icon/muiIcon";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { UserRoundCheck, UserRoundX, Search, Plus, RotateCcw, SquarePen, Trash2 } from "lucide-react";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { DUMMY_ACTIVE_USERS, DUMMY_DELETED_USERS } from "./DummyDataUser";
+
+
 
 const MasterUser = () => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("md"));
     // State First Page, Message, and Loading Effect
     const [firstRender, setFirstRender] = useState(false)
     const [app002p01Page, setApp002p01Page] = useState(true);
-    const [active, setActive] = useState("activeUser")
-    const handleTabChange = (event, newValue) => {
-        setActive(newValue);
+    const [selectedTab, setSelectedTab] = useState("active")
+    const handleTabChange = (param) => {
+        setSelectedTab(param);
         setRole("")
         setSearch("")
         refreshTable()
@@ -129,32 +108,37 @@ const MasterUser = () => {
             headerAlign: "center",
             bodyAlign: 'center',
             formatter: (cellContent, app002UserData) => (
-                <>
-                    <Stack direction="row" spacing={1} justifyContent="center">
-                        <Tooltip title="Update User" placement="top">
-                            <IconButton
-                                aria-label="edit"
-                                size="small"
+                <div className="flex items-center justify-center gap-2">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon-sm"
                                 onClick={() => handleModalEditOpen(app002UserData)}
-                                color="info"
                             >
-                                <EditOutlinedIcon fontSize="small" />
-                            </IconButton>
-                        </Tooltip>
+                                <SquarePen className="text-blue-500" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Edit</p>
+                        </TooltipContent>
+                    </Tooltip>
 
-                        <Tooltip title="Delete User" placement="top">
-                            <IconButton
-                                aria-label="delete"
-                                size="small"
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon-sm"
                                 onClick={() => handleModalDeleteOpen(app002UserData)}
-                                color="error"
                             >
-                                <DeleteOutlinedIcon fontSize="small" />
-
-                            </IconButton>
-                        </Tooltip>
-                    </Stack>
-                </>
+                                <Trash2 className="text-red-500" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Delete</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
             ),
         },
     ];
@@ -218,20 +202,22 @@ const MasterUser = () => {
             text: "Action",
             headerAlign: "center",
             formatter: (cellContent, app002UserDeletedData) => (
-                <>
-                    <Stack direction="row" spacing={1} justifyContent="center">
-                        <Tooltip title="Restore User" placement="top">
-                            <IconButton
-                                aria-label="restore"
-                                size="small"
+                <div className="flex items-center justify-center">
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                size="icon-sm"
                                 onClick={() => handleModalRestoreOpen(app002UserDeletedData)}
-                                color="info"
                             >
-                                <ReplayOutlinedIcon fontSize="small" />
-                            </IconButton>
-                        </Tooltip>
-                    </Stack>
-                </>
+                                <RotateCcw className="text-blue-500" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Restore</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </div>
             ),
         },
     ];
@@ -261,124 +247,124 @@ const MasterUser = () => {
     };
 
     // Data From API Active User
-    const getAllUser = useCallback(async (param) => {
-        setLoadingData(true);
-        try {
-            const response = await getUser(param);
-            console.table(response.data.users)
-            setApp002UserData(response?.data?.users ? response.data.users : []);
-            setApp002UserTotalData(response?.data?.count_data ? response.data.count_data : 0);
-            app002SetTotalPage(response?.data?.total_pages ? response.data?.total_pages : 0);
-
-
-        } catch (error) {
-            console.error("Gagal mengambil data:", error);
-
-        } finally {
-            setLoadingData(false);
-        }
-    });
-
     // const getAllUser = useCallback(async (param) => {
     //     setLoadingData(true);
+    //     try {
+    //         const response = await getUser(param);
+    //         console.table(response.data.users)
+    //         setApp002UserData(response?.data?.users ? response.data.users : []);
+    //         setApp002UserTotalData(response?.data?.count_data ? response.data.count_data : 0);
+    //         app002SetTotalPage(response?.data?.total_pages ? response.data?.total_pages : 0);
 
-    //     setTimeout(() => {
-    //         let filtered = [...DUMMY_ACTIVE_USERS];
 
-    //         if (param.search) {
-    //             filtered = filtered.filter(user =>
-    //                 user.name.toLowerCase().includes(param.search.toLowerCase()) ||
-    //                 user.email.toLowerCase().includes(param.search.toLowerCase())
-    //             );
-    //         }
+    //     } catch (error) {
+    //         console.error("Gagal mengambil data:", error);
 
-    //         if (param.role) {
-    //             filtered = filtered.filter(user => user.role === param.role);
-    //         }
-
-    //         if (param.sort) {
-    //             filtered.sort((a, b) => {
-    //                 if (a[param.sort] < b[param.sort]) return param.order === "asc" ? -1 : 1;
-    //                 if (a[param.sort] > b[param.sort]) return param.order === "asc" ? 1 : -1;
-    //                 return 0;
-    //             });
-    //         }
-
-    //         const start = (param.page - 1) * param.size;
-    //         const end = start + param.size;
-    //         const paginated = filtered.slice(start, end);
-
-    //         setApp002UserData(paginated);
-    //         setApp002UserTotalData(filtered.length);
-    //         app002SetTotalPage(Math.ceil(filtered.length / param.size));
-
+    //     } finally {
     //         setLoadingData(false);
-    //     }, 500);
-    // }, []);
+    //     }
+    // });
+
+    const getAllUser = useCallback(async (param) => {
+        setLoadingData(true);
+
+        setTimeout(() => {
+            let filtered = [...DUMMY_ACTIVE_USERS];
+
+            if (param.search) {
+                filtered = filtered.filter(user =>
+                    user.name.toLowerCase().includes(param.search.toLowerCase()) ||
+                    user.email.toLowerCase().includes(param.search.toLowerCase())
+                );
+            }
+
+            if (param.role) {
+                filtered = filtered.filter(user => user.role === param.role);
+            }
+
+            if (param.sort) {
+                filtered.sort((a, b) => {
+                    if (a[param.sort] < b[param.sort]) return param.order === "asc" ? -1 : 1;
+                    if (a[param.sort] > b[param.sort]) return param.order === "asc" ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            const start = (param.page - 1) * param.size;
+            const end = start + param.size;
+            const paginated = filtered.slice(start, end);
+
+            setApp002UserData(paginated);
+            setApp002UserTotalData(filtered.length);
+            app002SetTotalPage(Math.ceil(filtered.length / param.size));
+
+            setLoadingData(false);
+        }, 500);
+    }, []);
 
     useEffect(() => {
-        if (app002p01Page && active == "activeUser") {
+        if (app002p01Page && selectedTab == "active") {
             getAllUser(app002UserDataParam);
         }
-    }, [app002UserDataParam, active]);
+    }, [app002UserDataParam, selectedTab]);
 
     // Data From API Deleted User
-    const getAllDeletedUser = useCallback(async (param) => {
-        setLoadingData(true);
-        try {
-            const response = await getUserDeleted(param);
-            console.table(response.data.users)
-            setApp002UserDeletedData(response?.data?.users ? response.data.users : []);
-            setApp002UserDeletedTotalData(response?.data?.count_data ? response.data.count_data : 0);
-            app002SetTotalPageDeleted(response?.data?.total_pages ? response.data?.total_pages : 0);
-        } catch (error) {
-            console.error("Gagal mengambil data:", error);
-        } finally {
-            setLoadingData(false);
-        }
-    });
-
     // const getAllDeletedUser = useCallback(async (param) => {
     //     setLoadingData(true);
-
-    //     setTimeout(() => {
-    //         let filtered = [...DUMMY_DELETED_USERS];
-
-    //         if (param.search) {
-    //             filtered = filtered.filter(user =>
-    //                 user.name.toLowerCase().includes(param.search.toLowerCase())
-    //             );
-    //         }
-
-    //         if (param.role) {
-    //             filtered = filtered.filter(user => user.role === param.role);
-    //         }
-
-    //         if (param.sort) {
-    //             filtered.sort((a, b) => {
-    //                 if (a[param.sort] < b[param.sort]) return param.order === "asc" ? -1 : 1;
-    //                 if (a[param.sort] > b[param.sort]) return param.order === "asc" ? 1 : -1;
-    //                 return 0;
-    //             });
-    //         }
-
-    //         const start = (param.page - 1) * param.size;
-    //         const end = start + param.size;
-    //         const paginated = filtered.slice(start, end);
-
-    //         setApp002UserDeletedData(paginated);
-    //         setApp002UserDeletedTotalData(filtered.length);
-    //         app002SetTotalPageDeleted(Math.ceil(filtered.length / param.size));
-
+    //     try {
+    //         const response = await getUserDeleted(param);
+    //         console.table(response.data.users)
+    //         setApp002UserDeletedData(response?.data?.users ? response.data.users : []);
+    //         setApp002UserDeletedTotalData(response?.data?.count_data ? response.data.count_data : 0);
+    //         app002SetTotalPageDeleted(response?.data?.total_pages ? response.data?.total_pages : 0);
+    //     } catch (error) {
+    //         console.error("Gagal mengambil data:", error);
+    //     } finally {
     //         setLoadingData(false);
-    //     }, 500);
-    // }, []);
+    //     }
+    // });
+
+    const getAllDeletedUser = useCallback(async (param) => {
+        setLoadingData(true);
+
+        setTimeout(() => {
+            let filtered = [...DUMMY_DELETED_USERS];
+
+            if (param.search) {
+                filtered = filtered.filter(user =>
+                    user.name.toLowerCase().includes(param.search.toLowerCase())
+                );
+            }
+
+            if (param.role) {
+                filtered = filtered.filter(user => user.role === param.role);
+            }
+
+            if (param.sort) {
+                filtered.sort((a, b) => {
+                    if (a[param.sort] < b[param.sort]) return param.order === "asc" ? -1 : 1;
+                    if (a[param.sort] > b[param.sort]) return param.order === "asc" ? 1 : -1;
+                    return 0;
+                });
+            }
+
+            const start = (param.page - 1) * param.size;
+            const end = start + param.size;
+            const paginated = filtered.slice(start, end);
+
+            setApp002UserDeletedData(paginated);
+            setApp002UserDeletedTotalData(filtered.length);
+            app002SetTotalPageDeleted(Math.ceil(filtered.length / param.size));
+
+            setLoadingData(false);
+        }, 500);
+    }, []);
 
     useEffect(() => {
-        if (app002p01Page && active == "deletedUser") {
+        if (app002p01Page && selectedTab == "inactive") {
             getAllDeletedUser(app002UserDeletedDataParam);
         }
-    }, [app002UserDeletedDataParam, active]);
+    }, [app002UserDeletedDataParam, selectedTab]);
 
     // Search and Filtering (Free Text and Role)
     const roleOptions = [
@@ -387,35 +373,36 @@ const MasterUser = () => {
         { value: "STAFF", label: "Staff" },
     ];
 
-    const handleRoleChange = (event) => {
-        setRole(event)
+    const handleRoleChange = (e) => {
+        const switchValue = e === "all" ? "" : e
+        setRole(e)
         setSearch("")
 
-        if (active == "activeUser") {
+        if (selectedTab == "active") {
             setApp002UserDataParam(prev => ({
                 ...prev,
                 "page": 1,
-                "role": event,
+                "role": switchValue,
                 "search": ""
             }))
-        } else if (active == "deletedUser") {
+        } else if (selectedTab == "inactive") {
             setApp002UserDeletedDataParam(prev => ({
                 ...prev,
                 "page": 1,
-                "role": event,
+                "role": switchValue,
                 "search": ""
             }))
         }
     }
 
     const handleSearchState = () => {
-        if (active == "activeUser") {
+        if (selectedTab == "active") {
             setApp002UserDataParam(prev => ({
                 ...prev,
                 page: 1,
                 search: search
             }))
-        } else if (active == "deletedUser") {
+        } else if (selectedTab == "inactive") {
             setApp002UserDeletedDataParam(prev => ({
                 ...prev,
                 page: 1,
@@ -532,154 +519,153 @@ const MasterUser = () => {
     return (
         <React.Fragment>
             <RootPageCustom
-                msgStateGet={app002Msg}
-                msgStateSet={setApp002setMsg}
-                msgStateGetStatus={app002MsgStatus}
                 setFirstRender={setFirstRender}
-                title="Users Management"
-                icon={<PersonIcon fontSize="medium" />}
-                isMobile={isMobile}
+            // msgStateGet={app002Msg}
+            // msgStateSet={setApp002setMsg}
+            // msgStateGetStatus={app002MsgStatus}
             >
+                <div className={`${app002p01Page ? "flex" : "hidden"} flex-col gap-2`}>
+
+                    {/* Page Header */}
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-xl font-semibold">User Management</h1>
+                            <p className="text-sm text-muted-foreground">Manage and monitor system user accounts</p>
+                        </div>
+                        <Button
+                            size="sm"
+                            onClick={handleModalAddOpen}
+                            className={selectedTab === "active" ? "flex" : "hidden"}
+                            variant="primary"
+                        >
+                            <Plus className="h-4 w-4" />
+                            <span className="hidden sm:inline">Add User</span>
+                        </Button>
+                    </div>
+
+                    {/* Card Content */}
+                    <Card>
+                        <CardContent>
+                            <Tabs value={selectedTab} onValueChange={handleTabChange}>
+
+                                {/* Toolbar: Tabs + Filter */}
+                                <div className="flex flex-col gap-2 mb-4">
+
+                                    {/* Baris 1: Tabs */}
+                                    <div className="flex items-center justify-between gap-2">
+                                        <TabsList className="w-full sm:w-fit">
+                                            <TabsTrigger value="active" className="flex-1 sm:flex-none">
+                                                <UserRoundCheck className="mr-1 h-4 w-4" />Active
+                                            </TabsTrigger>
+                                            <TabsTrigger value="inactive" className="flex-1 sm:flex-none">
+                                                <UserRoundX className="mr-1 h-4 w-4" />Inactive
+                                            </TabsTrigger>
+                                        </TabsList>
+
+                                        {/* Search + Role desktop sejajar tabs */}
+                                        <div className="hidden sm:flex items-center gap-2">
+                                            <div className="relative">
+                                                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                                <Input
+                                                    placeholder="Search..."
+                                                    value={search}
+                                                    onChange={(e) => setSearch(e.target.value)}
+                                                    onKeyDown={(e) => { if (e.key === "Enter") handleSearchState() }}
+                                                    className="pl-8 w-48"
+                                                />
+                                            </div>
+                                            <Select value={role} onValueChange={handleRoleChange}>
+                                                <SelectTrigger className="w-36">
+                                                    <SelectValue placeholder="All Roles" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectGroup>
+                                                        <SelectItem value="all">All Roles</SelectItem>
+                                                        {roleOptions.map((item) => (
+                                                            <SelectItem key={item.value} value={item.value}>
+                                                                {item.label}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectGroup>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+                                    </div>
+
+                                    {/* Baris 2: Search || Role (mobile only) */}
+                                    <div className="flex items-center gap-2 sm:hidden">
+                                        <div className="relative flex-1">
+                                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                                            <Input
+                                                placeholder="Search..."
+                                                value={search}
+                                                onChange={(e) => setSearch(e.target.value)}
+                                                onKeyDown={(e) => { if (e.key === "Enter") handleSearchState() }}
+                                                className="pl-8 w-full"
+                                            />
+                                        </div>
+                                        <Select value={role} onValueChange={handleRoleChange}>
+                                            <SelectTrigger className="w-32">
+                                                <SelectValue placeholder="All Roles" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value="all">All Roles</SelectItem>
+                                                    {roleOptions.map((item) => (
+                                                        <SelectItem key={item.value} value={item.value}>
+                                                            {item.label}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                </div>
 
 
-                <Container
-                    maxWidth={false}
-                    hidden={!app002p01Page}
-                    disableGutters
-                    component={Paper}
-                    sx={{ overflow: "hidden", borderTopRightRadius: '0px', borderTopLeftRadius: isMobile ? "0px" : "10px" }}
-                >
-
-                    <Box display={"flex"} flexDirection={"column"} gap={2} py={1} px={2}>
-                        <Stack>
-                            <Tabs
-                                value={active}
-                                onChange={handleTabChange}
-                                variant="scrollable"
-                                scrollButtons={false}
-                                allowScrollButtonsMobile
-                            >
-                                <Tab label="Active User"
-                                    icon={<HowToRegIcon />}
-                                    iconPosition="start"
-                                    value="activeUser"
-                                />
-                                <Tab label="Deleted User"
-                                    value="deletedUser"
-                                    icon={<PersonRemoveOutlinedIcon />}
-                                    iconPosition="start"
-                                />
-                            </Tabs>
-                        </Stack>
-
-                        <Stack>
-                            <Grid container spacing={2} alignItems="center">
-                                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
-                                    <TextField
-                                        fullWidth
-                                        placeholder="Search"
-                                        value={search}
-                                        onChange={(e) => { setSearch(e.target.value) }}
-                                        onKeyDown={(e) => { if (e.key === 'Enter') { handleSearchState() } }}
-                                        size="small"
-                                        slotProps={{
-                                            input: {
-                                                endAdornment: (
-                                                    <IconButton
-                                                        onClick={handleSearchState}
-                                                        edge="end"
-                                                        size="small"
-                                                        disableRipple
-
-                                                    >
-                                                        <SearchIcon fontSize="small" />
-                                                    </IconButton>
-                                                ),
-                                            }
-                                        }}
+                                <TabsContent value="active">
+                                    <TableCustom
+                                        keyField="user_id"
+                                        loadingData={loadingData}
+                                        columns={app002UserColumns}
+                                        appdata={app002UserData}
+                                        appdataTotal={app002UserTotalData}
+                                        totalPage={app002TotalPage}
+                                        rowsPerPageOption={[5, 10, 20, 25]}
+                                        page={app002UserDataParam.page - 1}
+                                        rowsPerPage={app002UserDataParam.size}
+                                        sortField={app002UserDataParam.sort}
+                                        sortOrder={app002UserDataParam.order}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        onRequestSort={handleRequestSort}
                                     />
-                                </Grid>
+                                </TabsContent>
 
-                                <Grid size={{ xs: 6, sm: 6, md: 3 }}>
-                                    <Select
-                                        fullWidth
-                                        size="small"
-                                        value={role}
-                                        displayEmpty
-                                        onChange={(e) => handleRoleChange(e.target.value)}
-                                        renderValue={(selected) => {
-                                            if (!selected) return "All Roles";
-                                            return roleOptions.find((opt) => opt.value === selected)?.label;
-                                        }}
-                                    >
-                                        <MenuItem value="">All Roles</MenuItem>
-                                        {roleOptions.map((opt) => (
-                                            <MenuItem key={opt.value} value={opt.value}>
-                                                {opt.label}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </Grid>
+                                <TabsContent value="inactive">
+                                    <TableCustom
+                                        keyField="user_id"
+                                        loadingData={loadingData}
+                                        columns={app002UserDeletedColumns}
+                                        appdata={app002UserDeletedData}
+                                        appdataTotal={app002UserDeletedTotalData}
+                                        totalPage={app002TotalPageDeleted}
+                                        rowsPerPageOption={[5, 10, 20, 25]}
+                                        page={app002UserDeletedDataParam.page - 1}
+                                        rowsPerPage={app002UserDeletedDataParam.size}
+                                        sortField={app002UserDeletedDataParam.sort}
+                                        sortOrder={app002UserDeletedDataParam.order}
+                                        onPageChange={handleChangePageDeleted}
+                                        onRowsPerPageChange={handleChangeRowsPerPageDeleted}
+                                        onRequestSort={handleRequestSortDeleted}
+                                    />
+                                </TabsContent>
 
-                                <Grid
-                                    size={{ xs: 12, md: 6 }}
-                                    display={"flex"}
-                                    sx={{ justifyContent: "flex-end" }}
-                                >
-                                    {active !== "deletedUser" && (
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={handleModalAddOpen}>
-                                            Add
-                                        </Button>
-                                    )}
-                                </Grid>
-                            </Grid>
-                        </Stack>
-
-                        <Stack>
-                            {/* {active === "activeUser" && (
-                                <TableCustom
-                                    keyField="user_id"
-                                    loadingData={loadingData}
-                                    columns={app002UserColumns}
-                                    appdata={app002UserData}
-                                    appdataTotal={app002UserTotalData}
-                                    totalPage={app002TotalPage}
-                                    rowsPerPageOption={[5, 10, 20, 25]}
-                                    page={app002UserDataParam.page - 1}
-                                    rowsPerPage={app002UserDataParam.size}
-                                    sortField={app002UserDataParam.sort}
-                                    sortOrder={app002UserDataParam.order}
-                                    onPageChange={handleChangePage}
-                                    onRowsPerPageChange={handleChangeRowsPerPage}
-                                    onRequestSort={handleRequestSort}
-                                />
-                            )} */}
-
-                            {/* {active === "deletedUser" && (
-                                <TableCustom
-                                    keyField="user_id"
-                                    loadingData={loadingData}
-                                    columns={app002UserDeletedColumns}
-                                    appdata={app002UserDeletedData}
-                                    appdataTotal={app002UserDeletedTotalData}
-                                    totalPage={app002TotalPageDeleted}
-                                    rowsPerPageOption={[5, 10, 20, 25]}
-                                    page={app002UserDeletedDataParam.page - 1}
-                                    rowsPerPage={app002UserDeletedDataParam.size}
-                                    sortField={app002UserDeletedDataParam.sort}
-                                    sortOrder={app002UserDeletedDataParam.order}
-                                    onPageChange={handleChangePageDeleted}
-                                    onRowsPerPageChange={handleChangeRowsPerPageDeleted}
-                                    onRequestSort={handleRequestSortDeleted}
-                                />
-                            )} */}
-
-                        </Stack>
-                    </Box>
-                </Container>
+                            </Tabs>
+                        </CardContent>
+                    </Card>
+                </div>
 
                 {modalAddOpen && (
                     <MasterUserAdd
@@ -691,6 +677,7 @@ const MasterUser = () => {
                         setApp002setMsg={setApp002setMsg}
                         app002MsgStatus={app002MsgStatus}
                         setApp002setMsgStatus={setApp002setMsgStatus}
+                        roleOptions={roleOptions}
                     >
                     </MasterUserAdd>
                 )}
@@ -707,6 +694,7 @@ const MasterUser = () => {
                         setApp002setMsg={setApp002setMsg}
                         app002MsgStatus={app002MsgStatus}
                         setApp002setMsgStatus={setApp002setMsgStatus}
+                        roleOptions={roleOptions}
                     />
                 )}
 

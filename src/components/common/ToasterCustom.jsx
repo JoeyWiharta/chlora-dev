@@ -1,4 +1,4 @@
-import { Toaster } from 'react-hot-toast'
+import { Toaster } from "react-hot-toast"
 import { useThemeMode } from "@/context/ThemeContext"
 
 export const ToasterCustom = () => {

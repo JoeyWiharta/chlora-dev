@@ -13,7 +13,10 @@ const RootPageCustom = (props) => {
 
     return (
         <React.Fragment>
-            <Container disableGutters maxWidth={false}>
+            <div>
+                {props.children}
+            </div>
+            {/* <Container disableGutters maxWidth={false}>
                 <AlertMessage
                     msg={props.msgStateGet}
                     stateData={props.msgStateSet}
@@ -26,7 +29,7 @@ const RootPageCustom = (props) => {
                     </Stack>
                 </Stack>
                 <Box component={Paper} elevation={4}>{props.children}</Box>
-            </Container>
+            </Container> */}
         </React.Fragment>
     )
 }
