@@ -605,8 +605,7 @@ const MasterUser = () => {
                         setModalAddOpen={setModalAddOpen}
                         refreshTable={refreshTable}
                         roleOptions={roleOptions}
-                    >
-                    </MasterUserAdd>
+                    />
                 )}
 
                 {modalEditOpen && (

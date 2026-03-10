@@ -59,10 +59,11 @@ const PopupDeleteandRestore = (props) => {
 };
 
 PopupDeleteandRestore.propTypes = {
+    status: PropTypes.any,
     modalOpen: PropTypes.bool,
     modalClose: PropTypes.any,
     loading: PropTypes.any,
-    onDelete: PropTypes.any,
+    onClick: PropTypes.any,
 };
 
 export default PopupDeleteandRestore;

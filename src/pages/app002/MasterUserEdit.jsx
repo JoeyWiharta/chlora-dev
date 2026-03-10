@@ -220,10 +220,6 @@ MasterUserEdit.propTypes = {
     modalEditOpen: PropTypes.any,
     setModalEditOpen: PropTypes.any,
     refreshTable: PropTypes.any,
-    app002Msg: PropTypes.any,
-    setApp002setMsg: PropTypes.any,
-    app002MsgStatus: PropTypes.any,
-    setApp002setMsgStatus: PropTypes.any,
     app002UserEditData: PropTypes.any,
     roleOptions: PropTypes.any,
 };

@@ -9,7 +9,6 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { editDevice } from "../../utils/ListApi";
-import FormSpinner from "../../components/common/FormSpinner";
 
 
 
@@ -133,11 +132,6 @@ const MasterDeviceEdit = (props) => {
                         sx={{
                             p: 4
                         }}>
-
-                        <FormSpinner
-                            open={loadingSpinner}
-                            text={textLoading}
-                        />
 
                         <DialogContentText
                             textAlign={"center"}
