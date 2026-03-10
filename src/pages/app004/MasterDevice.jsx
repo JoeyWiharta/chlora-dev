@@ -397,13 +397,10 @@ const MasterDevice = () => {
                                 appdataTotal={app004DeviceTotalData}
                                 totalPage={app004TotalPage}
                                 rowsPerPageOption={[5, 10, 20, 25]}
-
                                 page={app004DeviceDataParam.page - 1}
                                 rowsPerPage={app004DeviceDataParam.size}
                                 sortField={app004DeviceDataParam.sort}
                                 sortOrder={app004DeviceDataParam.order}
-
-
                                 onPageChange={handleChangePage}
                                 onRowsPerPageChange={handleChangeRowsPerPage}
                                 onRequestSort={handleRequestSort}

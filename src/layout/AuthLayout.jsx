@@ -6,6 +6,7 @@ import AppSidebar from "./sidebar/AppSidebar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList } from "@/components/ui/breadcrumb";
 import BreadcrumbCustom from "@/components/common/BreadcrumbCustom";
 import AppHeader from "./header/AppHeader";
+import Footer from "./footer/Footer";
 
 const AuthLayout = (props) => {
 
@@ -23,6 +24,7 @@ const AuthLayout = (props) => {
                 <div className="flex flex-1 flex-col gap-4 p-4">
                     {props.children}
                 </div>
+                <Footer/>
             </SidebarInset>
         </SidebarProvider>
     );

@@ -5,10 +5,10 @@ import * as Yup from "yup";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
-import toast from "react-hot-toast";
-import { addCluster } from "../../utils/ListApi";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
+import { addCluster } from "../../utils/ListApi";
 
 const MasterClusterAdd = (props) => {
   const [loadingSpinner, setLoadingSpinner] = useState(false);
@@ -44,7 +44,6 @@ const MasterClusterAdd = (props) => {
   });
 
   const SaveClusterAction = useCallback(async (param) => {
-    debugger
     const toastId = toast.loading("Loading...")
     try {
       const response = await addCluster({

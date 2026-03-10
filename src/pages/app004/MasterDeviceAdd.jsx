@@ -2,32 +2,24 @@ import React, { useState, useEffect, useCallback } from "react";
 import PropTypes from 'prop-types';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button, TextField, Stack, Box, InputAdornment, Select, Typography, Autocomplete } from "@mui/material";
-import MailOutlineOutlinedIcon from '@mui/icons-material/MailOutlineOutlined';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 import { addDevice } from "../../utils/ListApi";
-import { Mail } from "lucide-react";
-
-
 
 const MasterDeviceAdd = (props) => {
-
-  // State for Loading Spinner
   const [loadingSpinner, setLoadingSpinner] = useState(false);
-  const [textLoading, setTextLoading] = useState("")
 
   useEffect(() => {
     if (props.modalAddOpen) {
       app004p02ValidInput.resetForm()
-      console.log(props.clusterOption)
     }
   }, [props.modalAddOpen])
 
-
-  // Function Close, Reset, and Refresh After Submitting
   const handleClose = () => {
     debugger
     props.setModalAddOpen(false);
@@ -37,44 +29,39 @@ const MasterDeviceAdd = (props) => {
   const app004p02ValidInput = useFormik({
     initialValues:
     {
-      device_name: "",
-      device_type: "",
-      cluster_id: "",
+      deviceName: "",
+      deviceType: "",
+      clusterId: "",
     },
     validationSchema: Yup.object
       ({
-        device_name: Yup.string().required("Device Name is required."),
-        device_type: Yup.string().required("Device Type is required."),
-        cluster_id: Yup.string().required("Cluster Name is required."),
+        deviceName: Yup.string().required("Device Name is required."),
+        deviceType: Yup.string().required("Device Type is required."),
+        clusterId: Yup.string().required("Cluster Name is required."),
       }),
 
     onSubmit: async (values, { setSubmitting }) => {
-      debugger
+      toast.dismiss()
       setSubmitting(true)
       setLoadingSpinner(true)
-      setTextLoading("Processing...")
       await SaveDeviceAction(values)
       setSubmitting(false)
     },
   });
 
   const SaveDeviceAction = useCallback(async (param) => {
+    const toastId = toast.loading("Loading...")
     try {
       const response = await addDevice(param)
-      debugger
       if (response.status === 201 || response.status === 200) {
-        props.setApp004setMsg("Device Has Been Successfully Added.");
-        props.setApp004setMsgStatus("success");
+        toast.success("Device Has Been Successfully Added.", { id: toastId })
         props.refreshTable();
         handleClose()
       }
     } catch (error) {
-      debugger
-      props.setApp004setMsg(error?.response?.data?.detail || "System is Unavailable. Please Try Again Later.")
-      props.setApp004setMsgStatus("error")
+      toast.error(error?.response?.data?.detail || "System is Unavailable. Please Try Again Later.", { id: toastId })
     } finally {
       setLoadingSpinner(false)
-      setTextLoading("")
     }
   })
 
@@ -82,194 +69,122 @@ const MasterDeviceAdd = (props) => {
     <React.Fragment>
       <Dialog
         open={props.modalAddOpen}
-        onClose={(event, reason) => {
-          if (reason === 'backdropClick') return;
-          handleClose()
-        }}
-        fullWidth={true}
-        maxWidth={"xs"}
-        scroll={"paper"}
+        onOpenChange={(open) => { if (!open) handleClose() }}
       >
-        <DialogTitle
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            pr: 1,
-          }}
+        <DialogContent
+          className="sm:max-w-md"
+          onInteractOutside={(e) => e.preventDefault()}
+          onOpenAutoFocus={(e) => e.preventDefault()}
         >
-          Add Device
+          <DialogHeader>
+            <DialogTitle>Add Device</DialogTitle>
+            <DialogDescription>Add a new device to the master list</DialogDescription>
+          </DialogHeader>
 
-          <IconButton
-            aria-label="close"
-            onClick={handleClose}
-            sx={{
-              color: 'text.secondary'
-            }}
+          <form
+            onSubmit={app004p02ValidInput.handleSubmit}
+            className="flex flex-col gap-6"
           >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+            <FieldGroup className="gap-2">
+              <Field className="gap-2">
+                <FieldLabel>Device Name</FieldLabel>
+                <InputGroup className="overflow-hidden">
+                  <InputGroupInput
+                    id="deviceName"
+                    name="deviceName"
+                    type="text"
+                    placeholder="Enter device name"
+                    value={app004p02ValidInput.values.deviceName}
+                    onChange={app004p02ValidInput.handleChange}
+                    onBlur={app004p02ValidInput.handleBlur}
+                    aria-invalid={app004p02ValidInput.touched.deviceName && !!app004p02ValidInput.errors.deviceName}
+                  />
+                </InputGroup>
+                {app004p02ValidInput.touched.deviceName && app004p02ValidInput.errors.deviceName && (
+                  <FieldDescription className="text-xs text-destructive">{app004p02ValidInput.errors.deviceName}</FieldDescription>
+                )}
+              </Field>
 
-        <DialogContent dividers={scroll === "paper"}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            overflowY: 'auto',
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-            scrollbarWidth: 'none',
-            '-ms-overflow-style': 'none',
-          }}
-        >
-          <Stack
-            spacing={4}
-            sx={{
-              // bgcolor: 'darkRed',
-              p: 4
-            }}>
-
-
-            <DialogContentText
-              textAlign={"center"}
-              sx={{
-                color: 'text.primary'
-              }}>
-              Add a new Device and complete the information below
-            </DialogContentText>
-
-            <Box
-              component="form"
-              onSubmit={app004p02ValidInput.handleSubmit}
-              sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                gap: 3,
-                // bgcolor: "darkblue"
-              }}
-            >
-
-              <Box>
-                <Typography
-                  variant="body2" fontWeight="medium"
-                  mb={1}
+              <Field>
+                <FieldLabel>Device Type</FieldLabel>
+                <Select
+                  value={app004p02ValidInput.values.deviceType}
+                  onValueChange={(val) => app004p02ValidInput.setFieldValue("deviceType", val)}
+                  onOpenChange={() => app004p02ValidInput.setFieldTouched("deviceType", true)}
                 >
-                  Device Name
-                </Typography>
-                <TextField
-                  className="auth-field"
-                  variant="outlined"
-                  placeholder="Device Name"
-                  name="device_name"
-                  size="medium"
-                  fullWidth
-                  value={app004p02ValidInput.values.device_name}
-                  onChange={app004p02ValidInput.handleChange}
-                  onBlur={app004p02ValidInput.handleBlur}
-                  error={app004p02ValidInput.touched.device_name && Boolean(app004p02ValidInput.errors.device_name)}
-                  helperText={app004p02ValidInput.touched.device_name && app004p02ValidInput.errors.device_name}
-                />
-              </Box>
+                  <SelectTrigger
+                    id="deviceType"
+                    aria-invalid={app004p02ValidInput.touched.deviceType && !!app004p02ValidInput.errors.deviceType}
+                  >
+                    <SelectValue placeholder="Select device type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {props.deviceTypeOption.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {app004p02ValidInput.touched.deviceType && app004p02ValidInput.errors.deviceType && (
+                  <FieldDescription className="text-xs text-destructive">{app004p02ValidInput.errors.deviceType}</FieldDescription>
+                )}
+              </Field>
 
-              <Box>
-                <Typography
-                  variant="body2" fontWeight="medium"
-                  mb={1}
+              <Field>
+                <FieldLabel>Cluster Name</FieldLabel>
+                <Select
+                  value={app004p02ValidInput.values.clusterName}
+                  onValueChange={(val) => app004p02ValidInput.setFieldValue("clusterName", val)}
+                  onOpenChange={() => app004p02ValidInput.setFieldTouched("clusterName", true)}
                 >
-                  Device Type
-                </Typography>
+                  <SelectTrigger
+                    id="deviceType"
+                    aria-invalid={app004p02ValidInput.touched.clusterName && !!app004p02ValidInput.errors.clusterName}
+                  >
+                    <SelectValue placeholder="Select device type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {props.clusterOption.map((item) => (
+                        <SelectItem key={item.value} value={item.value}>
+                          {item.label}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {app004p02ValidInput.touched.clusterName && app004p02ValidInput.errors.clusterName && (
+                  <FieldDescription className="text-xs text-destructive">{app004p02ValidInput.errors.clusterName}</FieldDescription>
+                )}
+              </Field>
 
-                <Autocomplete
-                  fullWidth
-                  options={props.deviceTypeOption}
-                  getOptionLabel={(option) => option.label}
-                  value={props.deviceTypeOption?.find(opt => opt.value === app004p02ValidInput.values.device_type) || null}
-                  onChange={(event, newValue) => { app004p02ValidInput.setFieldValue('device_type', newValue ? newValue.value : '') }}
-                  onBlur={() => app004p02ValidInput.handleBlur('device_type')}
-                  isOptionEqualToValue={(option, value) => option.value === value.value}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      className="auth-field"
-                      placeholder="Device Type"
-                      variant="outlined"
-                      name="device_type"
-                      error={app004p02ValidInput.touched.device_type && Boolean(app004p02ValidInput.errors.device_type)}
-                      helperText={app004p02ValidInput.touched.device_type && app004p02ValidInput.errors.device_type}
-                    />
-                  )}
-                />
-              </Box>
-
-              <Box>
-                <Typography
-                  variant="body2" fontWeight="medium"
-                  mb={1}
-                >
-                  Cluster Name
-                </Typography>
-
-                <Autocomplete
-                  fullWidth
-                  options={props.clusterOption}
-                  getOptionLabel={(option) => option.label}
-                  value={props.clusterOption?.find(opt => opt.value === app004p02ValidInput.values.cluster_id) || null}
-                  onChange={(event, newValue) => { app004p02ValidInput.setFieldValue('cluster_id', newValue ? newValue.value : '') }}
-                  onBlur={() => app004p02ValidInput.handleBlur('cluster_id')}
-                  isOptionEqualToValue={(option, value) => option.value === value.value}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      className="auth-field"
-                      placeholder="Cluster Name"
-                      variant="outlined"
-                      name="cluster_id"
-                      error={app004p02ValidInput.touched.cluster_id && Boolean(app004p02ValidInput.errors.cluster_id)}
-                      helperText={app004p02ValidInput.touched.cluster_id && app004p02ValidInput.errors.cluster_id}
-                    />
-                  )}
-                />
-              </Box>
-
-              <DialogActions sx={{ justifyContent: 'center', gap: 2, p: 0, mt: 2 }}  >
-                <Button
-                  color="main"
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    minHeight: '50px',
-                    bgcolor: 'button.grey',
-                    borderRadius: '15px',
-                    '&:hover': {
-                      bgcolor: 'button.grey',
-                      opacity: 0.9,
-                    },
-                  }}
-                  onClick={handleClose}
-                >
-                  CANCEL
-                </Button>
+              <DialogFooter className="flex-row gap-2">
+                <DialogClose asChild>
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={handleClose}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
                 <Button
                   type="submit"
-                  color="success"
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    minHeight: '50px',
-                    borderRadius: '15px',
-                    '&:hover': {
-                      bgcolor: '#61A05A'
-                    },
-                  }}
+                  className="flex-1"
+                  disabled={loadingSpinner}
                 >
-                  ADD
+                  <Spinner
+                    data-icon="inline-start"
+                    className={loadingSpinner ? "flex" : 'hidden'}
+                  />
+                  {loadingSpinner ? "Saving..." : "Add Device"}
                 </Button>
-              </DialogActions>
-            </Box>
-          </Stack>
+              </DialogFooter>
+            </FieldGroup>
+          </form>
         </DialogContent>
       </Dialog>
     </React.Fragment>
@@ -280,10 +195,6 @@ MasterDeviceAdd.propTypes = {
   modalAddOpen: PropTypes.any,
   setModalAddOpen: PropTypes.any,
   refreshTable: PropTypes.any,
-  app004Msg: PropTypes.any,
-  setApp004setMsg: PropTypes.any,
-  app004MsgStatus: PropTypes.any,
-  setApp004setMsgStatus: PropTypes.any,
 };
 
 export default MasterDeviceAdd

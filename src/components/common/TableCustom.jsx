@@ -131,7 +131,7 @@ const TableCustom = (props) => {
                             <TableRow>
                                 <TableCell
                                     colSpan={props.columns.length}
-                                    className="h-105 text-center text-muted-foreground"
+                                    className="h-97 text-center text-muted-foreground"
                                 >
                                     Loading...
                                 </TableCell>
@@ -140,7 +140,7 @@ const TableCustom = (props) => {
                             <TableRow>
                                 <TableCell
                                     colSpan={props.columns.length}
-                                    className="h-105 text-center"
+                                    className="h-97 text-center"
                                 >
                                     <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
                                         <InboxIcon className="h-10 w-10 opacity-40" />

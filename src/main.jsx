@@ -4,7 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from "../src/App"
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProviderCustom } from './context/ThemeContext';
-import "./index.css"
+import "./styles/index.css"
 import { ToasterCustom } from './components/common/ToasterCustom';
 import SmallIcon from "./assets/images/SmallIcon.png"
 
