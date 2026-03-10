@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { addUser } from "../../utils/ListApi";
-import FormSpinner from "../../components/common/FormSpinner";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,11 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import toast from "react-hot-toast";
 
-
-
 const MasterUserAdd = (props) => {
 
-  // State for Loading Spinner
   const [loadingSpinner, setLoadingSpinner] = useState(false);
 
   useEffect(() => {
@@ -27,15 +21,10 @@ const MasterUserAdd = (props) => {
     }
   }, [props.modalAddOpen])
 
-
-
-  // Function Close, Reset, and Refresh After Submitting
   const handleClose = () => {
-    debugger
     props.setModalAddOpen(false);
   }
 
-  // Validation Form
   const app002p02ValidInput = useFormik({
     initialValues:
     {
@@ -47,17 +36,12 @@ const MasterUserAdd = (props) => {
       ({
         email: Yup.string()
           .required("Email is required.")
-          .matches(
-            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-            "Please enter a valid email address."
-          ),
-        name: Yup.string()
-          .required("Name is required."),
+          .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please enter a valid email address."),
+        name: Yup.string().required("Name is required."),
         role: Yup.string().required("Role is required."),
       }),
 
     onSubmit: async (values, { setSubmitting }) => {
-      debugger
       toast.dismiss()
       setSubmitting(true)
       setLoadingSpinner(true)
@@ -72,17 +56,12 @@ const MasterUserAdd = (props) => {
       const response = await addUser(param)
       if (response.status === 201 || response.status === 200) {
         toast.success("User Has Been Successfully Added.")
-        // props.setApp002setMsg("User Has Been Successfully Added.");
-        // props.setApp002setMsgStatus("success");
         props.refreshTable();
         handleClose()
       }
     } catch (error) {
       debugger
       toast.error(error?.response?.data?.detail || "System is Unavailable. Please Try Again Later.")
-      // props.setApp002setMsg()
-      // props.setApp002setMsgStatus("error")
-
     } finally {
       setLoadingSpinner(false)
     }
@@ -188,7 +167,6 @@ const MasterUserAdd = (props) => {
               </DialogClose>
               <Button
                 type="submit"
-                variant="primary"
                 className="flex-1"
                 disabled={loadingSpinner}
               >
@@ -200,9 +178,7 @@ const MasterUserAdd = (props) => {
               </Button>
             </DialogFooter>
           </form>
-
         </DialogContent>
-
       </Dialog>
     </React.Fragment>
   )
@@ -212,10 +188,6 @@ MasterUserAdd.propTypes = {
   modalAddOpen: PropTypes.any,
   setModalAddOpen: PropTypes.any,
   refreshTable: PropTypes.any,
-  app002Msg: PropTypes.any,
-  setApp002setMsg: PropTypes.any,
-  app002MsgStatus: PropTypes.any,
-  setApp002setMsgStatus: PropTypes.any,
   roleOptions: PropTypes.any,
 };
 

@@ -14,10 +14,8 @@ import toast from "react-hot-toast";
 
 
 const MasterUserEdit = (props) => {
-    // State for Loading Spinner
     const [loadingSpinner, setLoadingSpinner] = useState(false);
-
-
+    const handleClose = () => { props.setModalEditOpen(false) }
 
     useEffect(() => {
         if (props.modalEditOpen) {
@@ -28,11 +26,6 @@ const MasterUserEdit = (props) => {
             app002p03ValidInput.setFieldValue("role", props.app002UserEditData.role)
         }
     }, [props.modalEditOpen])
-
-    // Function Close, Reset, and Refresh After Submitting
-    const handleClose = () => {
-        props.setModalEditOpen(false);
-    }
 
     // Validation Form
     const app002p03ValidInput = useFormik({
@@ -47,17 +40,12 @@ const MasterUserEdit = (props) => {
             ({
                 email: Yup.string()
                     .required("Email is required.")
-                    .matches(
-                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        "Please enter a valid email address."
-                    ),
-                name: Yup.string()
-                    .required("Name is required."),
+                    .matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please enter a valid email address."),
+                name: Yup.string().required("Name is required."),
                 role: Yup.string().required("Role is required."),
             }),
 
         onSubmit: async (values, { setSubmitting }) => {
-            debugger
             toast.dismiss()
             setSubmitting(true)
             setLoadingSpinner(true)
@@ -68,7 +56,6 @@ const MasterUserEdit = (props) => {
 
     const EditUserAction = useCallback(async (param) => {
         try {
-            debugger
             const response = await editUser(
                 param.userId,
                 {
@@ -78,17 +65,12 @@ const MasterUserEdit = (props) => {
                 })
             if (response.status === 200) {
                 toast.success("User updated successfully.")
-                // props.setApp002setMsg("User Has Been Successfully Updated.");
-                // props.setApp002setMsgStatus("success");
                 props.refreshTable();
                 handleClose()
             }
         } catch (error) {
             debugger
             toast.error(error?.response?.data?.detail || "System is Unavailable. Please Try Again Later.")
-
-            // props.setApp002setMsg(error?.response?.data?.detail || "System is Unavailable. Please Try Again Later.")
-            // props.setApp002setMsgStatus("error")
         } finally {
             setLoadingSpinner(false)
         }
@@ -99,7 +81,6 @@ const MasterUserEdit = (props) => {
             <Dialog
                 open={props.modalEditOpen}
                 onOpenChange={(open) => { if (!open) handleClose() }}
-
             >
                 <DialogContent
                     className="sm:max-w-md"
@@ -196,7 +177,6 @@ const MasterUserEdit = (props) => {
                             </DialogClose>
                             <Button
                                 type="submit"
-                                variant="primary"
                                 className="flex-1"
                                 disabled={loadingSpinner}
                             >

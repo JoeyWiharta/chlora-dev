@@ -1,29 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogMedia } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { TriangleAlert, RotateCcw, Trash2 } from "lucide-react";
+import { RotateCcw, Trash2 } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 
 const PopupDeleteandRestore = (props) => {
-
     const isRestore = props.status === "restore"
-
-    const handleClick = () => {
-        if (props.onClick) {
-            props.onClick()
-        }
-    }
 
     return (
         <AlertDialog open={props.modalOpen}>
             <AlertDialogContent
-                // size="sm"
                 onInteractOutside={(e) => e.preventDefault()}
                 onOpenAutoFocus={(e) => e.preventDefault()}
             >
                 <AlertDialogHeader className="text-center align-middle justify-center items-center">
-                    {/* Icon custom - tidak pakai AlertDialogMedia */}
                     <div className={`mx-auto mb-2 inline-flex size-16 items-center justify-center rounded-md *:[svg:not([class*='size-'])]:size-8 ${isRestore
                         ? "bg-blue-100 text-blue-500 dark:bg-blue-950"
                         : "bg-red-100 text-red-500 dark:bg-red-950"
@@ -32,7 +23,7 @@ const PopupDeleteandRestore = (props) => {
                     </div>
 
                     <AlertDialogTitle className="text-center w-full">
-                        Are you sure you want to continue?
+                        {isRestore ? "Restore this data?" : "Delete this data?"}
                     </AlertDialogTitle>
 
                     <AlertDialogDescription className="text-center sm:text-center">
@@ -55,7 +46,7 @@ const PopupDeleteandRestore = (props) => {
                     <Button
                         className="flex-1"
                         variant={isRestore ? "info" : "destructive"}
-                        onClick={handleClick}
+                        onClick={props.onClick}
                         disabled={props.loading}
                     >
                         <Spinner className={props.loading ? "flex" : "hidden"} />
@@ -63,153 +54,7 @@ const PopupDeleteandRestore = (props) => {
                     </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
-
         </AlertDialog>
-        // <React.Fragment>
-        //     <Dialog
-        //         open={props.modalOpen}
-        //         onClose={(event, reason) => {
-        //             if (reason === 'backdropClick') return;
-        //             props.modalClose
-        //         }}
-        //         fullWidth={true}
-        //         maxWidth={"sm"}
-        //         sx={{
-        //             '& .MuiDialog-paper': {
-        //                 bgcolor: 'background.default',
-        //                 borderRadius: "50px"
-        //             }
-        //         }}
-        //     >
-        //         <FormSpinner
-        //             open={props.loading}
-        //             text={'Processing...'}
-        //         />
-        //         <DialogTitle
-        //             sx={{
-        //                 display: 'flex',
-        //                 alignItems: 'center',
-        //                 justifyContent: 'center',
-        //                 // bgcolor: 'red'
-        //             }}
-        //         >
-        //             {props.status == "restore" ? (
-        //                 <ReplayIcon
-        //                     sx={{
-        //                         fontSize: {
-        //                             xs: 70,
-        //                             sm: 100,
-        //                         },
-        //                     }}
-        //                     color="info"
-        //                 />
-        //             ) :
-        //                 (<ErrorIcon
-        //                     sx={{
-        //                         fontSize: {
-        //                             xs: 70,
-        //                             sm: 100,
-        //                         },
-        //                     }}
-        //                     color="warning"
-        //                 />)
-        //             }
-
-        //         </DialogTitle>
-
-        //         <DialogContent
-        //             sx={{
-        //                 display: 'flex',
-        //                 flexDirection: 'column',
-        //                 overflowY: 'auto',
-        //                 '&::-webkit-scrollbar': {
-        //                     display: 'none',
-        //                 },
-        //                 scrollbarWidth: 'none',
-        //                 '-ms-overflow-style': 'none',
-        //                 // bgcolor: 'blue'
-        //             }}
-        //         >
-        //             <Stack
-        //                 spacing={1}
-        //                 sx={{
-        //                     p: 0,
-        //                 }}>
-
-        //                 <Box sx={{
-        //                     display: 'flex',
-        //                     flexDirection: 'column',
-        //                     gap: 2,
-        //                 }}>
-        //                     <DialogContentText
-        //                         textAlign={"center"}
-        //                         variant="h6"
-        //                         sx={{
-        //                             color: 'text.primary',
-        //                         }}>
-        //                         Are you sure you want to continue?
-        //                     </DialogContentText>
-
-        //                     <DialogContentText
-        //                         textAlign={"center"}
-        //                         variant="body2"
-        //                         sx={{
-        //                             color: 'text.primary',
-        //                             // bgcolor: 'grey'
-
-        //                         }}>
-        //                         {props.status != "restore" ? "Deleted data will not be permanently deleted immediately and can still be restored via the data archive menu" : "This action will restore the selected data and make it active again"}
-        //                     </DialogContentText>
-        //                 </Box>
-
-
-        //                 <Box>
-        //                     <DialogActions sx={{ justifyContent: 'center', gap: 2, p: 0, px: 10, mt: 4 }}  >
-        //                         <Button
-        //                             color="main"
-        //                             variant="contained"
-        //                             fullWidth
-        //                             sx={{
-        //                                 minHeight: '50px',
-        //                                 bgcolor: 'button.grey',
-        //                                 borderRadius: '15px',
-        //                                 '&:hover': {
-        //                                     bgcolor: 'button.grey',
-        //                                     opacity: 0.9,
-        //                                 },
-        //                             }}
-        //                             onClick={props.modalClose}
-        //                         >
-        //                             CANCEL
-        //                         </Button>
-        //                         <Button
-        //                             type="submit"
-        //                             color={props.status == "restore" ? "info" : "error"}
-        //                             variant="contained"
-        //                             fullWidth
-        //                             onClick={handleClick}
-
-        //                             sx={{
-        //                                 minHeight: '50px',
-        //                                 borderRadius: '15px',
-        //                                 '&:hover': {
-        //                                     opacity: 0.9,
-        //                                 },
-        //                             }}
-        //                         >
-        //                             {props.status == "restore" ? "RESTORE" : "DELETE"}
-        //                         </Button>
-        //                     </DialogActions>
-        //                 </Box>
-
-        //             </Stack>
-        //         </DialogContent>
-
-
-
-
-        //     </Dialog>
-        // </React.Fragment>
     );
 };
 
