@@ -110,7 +110,7 @@ const AppSidebarContent = () => {
             </SidebarGroup>
 
             <SidebarGroup>
-                <SidebarGroupLabel>Others</SidebarGroupLabel>
+                {/* <SidebarGroupLabel>Others</SidebarGroupLabel> */}
                 <SidebarMenu>
                     {otherMenu.map((item) => {
                         return (
