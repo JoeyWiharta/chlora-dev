@@ -233,7 +233,7 @@ const MasterUser = () => {
 
     // Data From API Active User
     const getAllUser = useCallback(async (param) => {
-        toast.dismiss()
+        // toast.dismiss()
         setLoading(true);
         try {
             const response = await getUser(param);
@@ -289,7 +289,7 @@ const MasterUser = () => {
     // Data From API Deleted User
 
     const getAllDeletedUser = useCallback(async (param) => {
-        toast.dismiss()
+        // toast.dismiss()
         setLoading(true);
         try {
             const response = await getUserDeleted(param);

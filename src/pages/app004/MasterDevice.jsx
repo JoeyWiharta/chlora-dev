@@ -166,7 +166,7 @@ const MasterDevice = () => {
 
     // Data From API Active Device
     const getAllDevice = useCallback(async (param) => {
-        toast.dismiss()
+        // toast.dismiss()
         setLoadingData(true);
         try {
             const response = await getDevice(param);
@@ -197,7 +197,7 @@ const MasterDevice = () => {
         { value: "OFFLINE", label: "Offline" },
     ])
     const getAllCluster = useCallback(async (param) => {
-        toast.dismiss()
+        // toast.dismiss()
         setLoadingData(true);
         try {
             const response = await getCluster(param);

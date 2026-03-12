@@ -126,7 +126,7 @@ const MasterCluster = () => {
 
     // Data From API Active Cluster
     const getAllCluster = useCallback(async (param) => {
-        toast.dismiss()
+        // toast.dismiss()
         setLoading(true);
         try {
             const response = await getCluster(param);
