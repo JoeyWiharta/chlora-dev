@@ -192,7 +192,7 @@ const MasterDevice = () => {
     // State and Function for Dropdown Cluster
     const [clusterOption, setClusterOption] = useState([])
     const [deviceTypeOption, setDeviceTypeOption] = useState([
-        { value: "ACTUATOR", label: "Actuator" },
+        { value: "Actuator", label: "Actuator" },
         { value: "Sensor", label: "Sensor" },
     ])
     const [statusOptions, setStatusOptions] = useState([
@@ -235,13 +235,14 @@ const MasterDevice = () => {
     const [status, setStatus] = useState("")
 
     const handleStatusChange = (event) => {
+        const switchValue = e === "all" ? "" : e
         setStatus(event)
         setSearch("")
 
         setApp004DeviceDataParam(prev => ({
             ...prev,
             "page": 1,
-            "status": event,
+            "status": switchValue,
             "search": ""
         }))
     }
@@ -250,13 +251,14 @@ const MasterDevice = () => {
     const [cluster, setCluster] = useState("")
 
     const handleClusterChange = (event) => {
+        const switchValue = e === "all" ? "" : e
         setCluster(event)
         setSearch("")
 
         setApp004DeviceDataParam(prev => ({
             ...prev,
             "page": 1,
-            "clusterId": event,
+            "clusterId": switchValue,
             "search": ""
         }))
     }
