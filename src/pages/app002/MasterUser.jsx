@@ -59,7 +59,7 @@ const MasterUser = () => {
 
     const app002UserColumns = [
         {
-            dataField: "user_id",
+            dataField: "userId",
             text: "User ID",
             sort: true,
             headerAlign: "center",
@@ -143,7 +143,7 @@ const MasterUser = () => {
 
     const app002UserDeletedColumns = [
         {
-            dataField: "user_id",
+            dataField: "userId",
             text: "User ID",
             sort: true,
             headerAlign: "center",
@@ -328,7 +328,7 @@ const MasterUser = () => {
     }
 
     const app002HandleDeleteUser = () => {
-        if (app002UserDeleteData.user_id) {
+        if (app002UserDeleteData.userId) {
             toast.dismissAll()
             deleteUserAction(app002UserDeleteData)
         }
@@ -338,7 +338,7 @@ const MasterUser = () => {
         const toastId = toast.loading("Loading...")
         try {
             setLoading(true)
-            const response = await deleteUser(param.user_id)
+            const response = await deleteUser(param.userId)
 
             if (response.status === 204 || response.status === 200) {
                 toast.success("User Has Been Successfully Deleted.", { id: toastId })
@@ -360,7 +360,7 @@ const MasterUser = () => {
         setApp002UserRestoreData(obj)
     }
     const app002HandleRestoreUser = () => {
-        if (app002UserRestoreData.user_id) {
+        if (app002UserRestoreData.userId) {
             toast.dismissAll()
             restoreUserAction(app002UserRestoreData)
         }
@@ -369,7 +369,7 @@ const MasterUser = () => {
         const toastId = toast.loading("Loading...")
         try {
             setLoading(true)
-            const response = await restoreUser(param.user_id)
+            const response = await restoreUser(param.userId)
 
             if (response.status === 201 || response.status === 200) {
                 toast.success("User Has Been Successfully Restored.", { id: toastId })
@@ -478,7 +478,7 @@ const MasterUser = () => {
 
                                 <TabsContent value="active">
                                     <TableCustom
-                                        keyField="user_id"
+                                        keyField="userId"
                                         loadingData={loading}
                                         columns={app002UserColumns}
                                         appdata={app002UserData}
@@ -497,7 +497,7 @@ const MasterUser = () => {
 
                                 <TabsContent value="inactive">
                                     <TableCustom
-                                        keyField="user_id"
+                                        keyField="userId"
                                         loadingData={loading}
                                         columns={app002UserDeletedColumns}
                                         appdata={app002UserData}

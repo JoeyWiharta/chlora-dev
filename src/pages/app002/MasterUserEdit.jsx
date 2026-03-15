@@ -18,7 +18,7 @@ const MasterUserEdit = (props) => {
     useEffect(() => {
         if (props.modalEditOpen) {
             app002p03ValidInput.resetForm()
-            app002p03ValidInput.setFieldValue("userId", props.app002UserEditData.user_id)
+            app002p03ValidInput.setFieldValue("userId", props.app002UserEditData.userId)
             app002p03ValidInput.setFieldValue("email", props.app002UserEditData.email)
             app002p03ValidInput.setFieldValue("name", props.app002UserEditData.name)
             app002p03ValidInput.setFieldValue("role", props.app002UserEditData.role)
