@@ -53,9 +53,9 @@ const MasterDeviceAdd = (props) => {
     try {
       const response = await addDevice(
         {
-          device_name: param.deviceName,
-          device_type: param.deviceType,
-          cluster_id: param.clusterId,
+          deviceName: param.deviceName,
+          deviceType: param.deviceType,
+          clusterId: param.clusterId,
         })
       if (response.status === 201 || response.status === 200) {
         toast.success("Device Has Been Successfully Added.", { id: toastId })

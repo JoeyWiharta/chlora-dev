@@ -18,10 +18,10 @@ const MasterDeviceEdit = (props) => {
     useEffect(() => {
         if (props.modalEditOpen) {
             app004p03ValidInput.resetForm()
-            app004p03ValidInput.setFieldValue("deviceId", props.app004DeviceEditData.device_id)
-            app004p03ValidInput.setFieldValue("deviceName", props.app004DeviceEditData.device_name)
-            app004p03ValidInput.setFieldValue("deviceType", props.app004DeviceEditData.device_type)
-            app004p03ValidInput.setFieldValue("clusterId", props.app004DeviceEditData.cluster_id)
+            app004p03ValidInput.setFieldValue("deviceId", props.app004DeviceEditData.deviceId)
+            app004p03ValidInput.setFieldValue("deviceName", props.app004DeviceEditData.deviceName)
+            app004p03ValidInput.setFieldValue("deviceType", props.app004DeviceEditData.deviceType)
+            app004p03ValidInput.setFieldValue("clusterId", props.app004DeviceEditData.clusterId)
             app004p03ValidInput.setFieldValue("status", props.app004DeviceEditData.status)
         }
     }, [props.modalEditOpen])
@@ -58,9 +58,9 @@ const MasterDeviceEdit = (props) => {
             const response = await editDevice(
                 param.deviceId,
                 {
-                    device_name: param.deviceName,
-                    device_type: param.deviceType,
-                    cluster_id: param.clusterId,
+                    deviceName: param.deviceName,
+                    deviceType: param.deviceType,
+                    clusterId: param.clusterId,
                     status: param.status
                 }
             )

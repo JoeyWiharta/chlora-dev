@@ -59,28 +59,28 @@ const MasterDevice = () => {
     // Table Configuration Active Device (Header Table, Handle Page and Rows, Handle Sort)
     const app004DeviceColumns = [
         {
-            dataField: "device_id",
+            dataField: "deviceId",
             text: "Device ID",
             sort: true,
             headerAlign: "center",
             bodyAlign: 'center',
         },
         {
-            dataField: "device_name",
+            dataField: "deviceName",
             text: "Device Name",
             sort: true,
             headerAlign: "left",
             bodyAlign: 'left',
         },
         {
-            dataField: "device_type",
+            dataField: "deviceType",
             text: "Device Type",
             sort: true,
             headerAlign: "center",
             bodyAlign: 'center',
         },
         {
-            dataField: "cluster_name",
+            dataField: "clusterName",
             text: "Cluster Name",
             sort: true,
             headerAlign: "left",
@@ -171,8 +171,8 @@ const MasterDevice = () => {
         try {
             const response = await getDevice(param);
             setApp004DeviceData(response?.data?.devices ? response.data.devices : []);
-            setApp004DeviceTotalData(response?.data?.count_data ? response.data.count_data : 0);
-            app004SetTotalPage(response?.data?.total_pages ? response.data?.total_pages : 0);
+            setApp004DeviceTotalData(response?.data?.countData ? response.data.countData : 0);
+            app004SetTotalPage(response?.data?.totalPages ? response.data?.totalPages : 0);
         } catch (error) {
             if (error.isUnauthorized) return;
             toast.error("System is unavailable, please try again later.");
@@ -203,8 +203,8 @@ const MasterDevice = () => {
         try {
             const response = await getCluster(param);
             setClusterOption(response?.data?.clusters ? response.data.clusters.map(cluster => ({
-                value: cluster.cluster_id,
-                label: cluster.cluster_name,
+                value: cluster.clusterId,
+                label: cluster.clusterName,
             })) : []);
         } catch (error) {
             console.log(error)
@@ -293,7 +293,7 @@ const MasterDevice = () => {
         setApp004DeviceDeleteData(obj)
     }
     const app004HandleDeleteDevice = () => {
-        if (app004DeviceDeleteData.device_id) {
+        if (app004DeviceDeleteData.deviceId) {
             toast.dismissAll()
             deleteDeviceAction(app004DeviceDeleteData)
         }
@@ -302,7 +302,7 @@ const MasterDevice = () => {
         const toastId = toast.loading("Loading...")
         try {
             setLoadingDelete(true)
-            const response = await deleteDevice(param.device_id)
+            const response = await deleteDevice(param.deviceId)
 
             if (response.status === 204 || response.status === 200) {
                 toast.success("Device Has Been Successfully Deleted.", { id: toastId })
@@ -386,7 +386,7 @@ const MasterDevice = () => {
                             </div>
 
                             <TableCustom
-                                keyField="device_id"
+                                keyField="deviceId"
                                 loadingData={loadingData}
                                 columns={app004DeviceColumns}
                                 appdata={app004DeviceData}
