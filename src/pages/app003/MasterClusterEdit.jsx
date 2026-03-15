@@ -16,8 +16,8 @@ const MasterClusterEdit = (props) => {
     useEffect(() => {
         if (props.modalEditOpen) {
             app003p03ValidInput.resetForm()
-            app003p03ValidInput.setFieldValue("clusterId", props.app003ClusterEditData.cluster_id)
-            app003p03ValidInput.setFieldValue("clusterName", props.app003ClusterEditData.cluster_name)
+            app003p03ValidInput.setFieldValue("clusterId", props.app003ClusterEditData.clusterId)
+            app003p03ValidInput.setFieldValue("clusterName", props.app003ClusterEditData.clusterName)
 
         }
     }, [props.modalEditOpen])
@@ -53,7 +53,7 @@ const MasterClusterEdit = (props) => {
             const response = await editCluster(
                 param.clusterId,
                 {
-                    cluster_name: param.clusterName,
+                    clusterName: param.clusterName,
                 })
             if (response.status === 200) {
                 toast.success("Cluster Has Been Successfully Updated.", { id: toastId })

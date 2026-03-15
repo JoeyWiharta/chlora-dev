@@ -37,21 +37,21 @@ const MasterCluster = () => {
 
     const app003ClusterColumns = [
         {
-            dataField: "cluster_id",
+            dataField: "clusterId",
             text: "Cluster ID",
             sort: true,
             headerAlign: "center",
             bodyAlign: 'center',
         },
         {
-            dataField: "cluster_name",
+            dataField: "clusterName",
             text: "Cluster Name",
             sort: true,
             headerAlign: "center",
             bodyAlign: 'center',
         },
         {
-            dataField: "total_devices",
+            dataField: "totalDevices",
             text: "Total Device",
             sort: true,
             headerAlign: "center",
@@ -131,8 +131,8 @@ const MasterCluster = () => {
         try {
             const response = await getCluster(param);
             setApp003ClusterData(response?.data?.clusters ? response.data.clusters : []);
-            setApp003ClusterTotalData(response?.data?.count_data ? response.data.count_data : 0);
-            app003SetTotalPage(response?.data?.total_pages ? response.data?.total_pages : 0);
+            setApp003ClusterTotalData(response?.data?.countData ? response.data.countData : 0);
+            app003SetTotalPage(response?.data?.totalPages ? response.data?.totalPages : 0);
         } catch (error) {
             toast.error("System is unavailable, please try again later.");
         } finally {
@@ -185,7 +185,7 @@ const MasterCluster = () => {
         setApp003ClusterDeleteData(obj)
     }
     const app003HandleDeleteCluster = () => {
-        if (app003ClusterDeleteData.cluster_id) {
+        if (app003ClusterDeleteData.clusterId) {
             toast.dismissAll()
             deleteClusterAction(app003ClusterDeleteData)
         }
@@ -194,7 +194,7 @@ const MasterCluster = () => {
         const toastId = toast.loading("Loading...")
         try {
             setLoading(true)
-            const response = await deleteCluster(param.cluster_id)
+            const response = await deleteCluster(param.clusterId)
 
             if (response.status === 204 || response.status === 200) {
                 toast.success("Cluster Has Been Successfully Deleted.", { id: toastId })
@@ -246,7 +246,7 @@ const MasterCluster = () => {
                             </div>
 
                             <TableCustom
-                                keyField="cluster_id"
+                                keyField="clusterId"
                                 loadingData={loading}
                                 columns={app003ClusterColumns}
                                 appdata={app003ClusterData}

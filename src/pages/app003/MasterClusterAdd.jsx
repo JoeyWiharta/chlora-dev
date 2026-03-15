@@ -47,7 +47,7 @@ const MasterClusterAdd = (props) => {
     const toastId = toast.loading("Loading...")
     try {
       const response = await addCluster({
-        cluster_name: param.clusterName
+        clusterName: param.clusterName
       })
       if (response.status === 201 || response.status === 200) {
         toast.success("Cluster Has Been Successfully Added.", { id: toastId })

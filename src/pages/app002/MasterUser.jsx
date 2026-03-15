@@ -238,8 +238,8 @@ const MasterUser = () => {
         try {
             const response = await getUser(param);
             setApp002UserData(response?.data?.users ? response.data.users : []);
-            setApp002UserTotalData(response?.data?.count_data ? response.data.count_data : 0);
-            app002SetTotalPage(response?.data?.total_pages ? response.data?.total_pages : 0);
+            setApp002UserTotalData(response?.data?.countData ? response.data.countData : 0);
+            app002SetTotalPage(response?.data?.totalPages ? response.data?.totalPages : 0);
         } catch (error) {
             toast.error("System is unavailable, please try again later.")
         } finally {
@@ -255,8 +255,8 @@ const MasterUser = () => {
         try {
             const response = await getUserDeleted(param);
             setApp002UserData(response?.data?.users ? response.data.users : []);
-            setApp002UserTotalData(response?.data?.count_data ? response.data.count_data : 0);
-            app002SetTotalPage(response?.data?.total_pages ? response.data?.total_pages : 0);
+            setApp002UserTotalData(response?.data?.countData ? response.data.countData : 0);
+            app002SetTotalPage(response?.data?.totalPages ? response.data?.totalPages : 0);
         } catch (error) {
             toast.error("System is unavailable, please try again later.");
         } finally {
