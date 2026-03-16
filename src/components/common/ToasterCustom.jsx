@@ -14,6 +14,7 @@ export const ToasterCustom = () => {
                     background: isDark ? 'oklch(0.205 0 0)' : 'oklch(1 0 0)',
                     color: isDark ? 'oklch(0.985 0 0)' : 'oklch(0.145 0 0)',
                     border: `1px solid ${isDark ? 'oklch(1 0 0 / 10%)' : 'oklch(0.922 0 0)'}`,
+                    wordBreak: 'break-word',
                 },
             }}
         />

@@ -12,58 +12,67 @@ import SmallIcon from "../../assets/images/SmallIcon.png"
 import { useAuth } from "../../context/AuthContext";
 import { loginApi } from "../../utils/ListApi";
 
+const validationSchema = Yup.object({
+    userIdOrEmail: Yup.string().required("Email or UserID is required."),
+    password: Yup.string().required("Password is required."),
+})
+
+const initialValues = {
+    userIdOrEmail: "",
+    password: "",
+}
+
 const LoginForm = () => {
     const { login } = useAuth();
     const navigate = useNavigate()
-
-    // Form and UI Controller
     const isSubmittingRef = useRef(false)
     const [isPending, setIsPending] = useState(false)
     const [showPassword, setShowPassword] = useState(false);
 
+    const handleBeforeLogin = (setSubmitting) => {
+        toast.dismiss()
+        if (isSubmittingRef.current) return false
+        isSubmittingRef.current = true
+        setSubmitting(true)
+        setIsPending(true)
+        return true
+    }
+
     const handleLogin = async (values) => {
-        const response = await loginApi({
-            userIdOrEmail: values.userIdOrEmail,
-            password: values.password
-        })
+        const response = await loginApi(values)
         return response
+    }
+
+    const handleLoginSuccess = (data, resetForm) => {
+        login(data)
+        setTimeout(() => {
+            resetForm()
+            navigate("/")
+            isSubmittingRef.current = false
+            setIsPending(false)
+        }, 1000)
+    }
+
+    const handleLoginError = (setSubmitting) => {
+        isSubmittingRef.current = false
+        setIsPending(false)
+        setSubmitting(false)
     }
 
     const formik = useFormik({
         enableReinitialize: true,
-        initialValues: {
-            userIdOrEmail: "",
-            password: "",
-        },
-        validationSchema: Yup.object({
-            userIdOrEmail: Yup.string().required("Email or UserID is required."),
-            password: Yup.string().required("Password is required."),
-        }),
+        initialValues,
+        validationSchema,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
-            toast.dismissAll()
-            if (isSubmittingRef.current) return
-            isSubmittingRef.current = true
-            setSubmitting(true)
-            setIsPending(true)
+            if (!handleBeforeLogin(setSubmitting)) return
             const toastId = toast.loading("Logging in...")
-
             try {
                 const response = await handleLogin(values)
-                login(response.data.data)
-                toast.success("Logged in successfully.", { id: toastId })
-                setTimeout(() => {
-                    resetForm()
-                    navigate("/")
-                }, 1000)
+                toast.success(response?.data?.message, { id: toastId })
+                handleLoginSuccess(response.data.data, resetForm)
             } catch (error) {
-                if (error.response) {
-                    toast.error(error.response.data.message, { id: toastId })
-                } else {
-                    toast.error("System is Unavailable. Please Try Again Later.", { id: toastId })
-                }
-                    isSubmittingRef.current = false
-                    setIsPending(false)
-                    setSubmitting(false)
+                toast.error(error?.response?.data?.message || "Service unavailable. Please try again later.", { id: toastId })
+                handleLoginError(setSubmitting)
             }
         },
     });
