@@ -15,10 +15,12 @@ const MasterClusterEdit = (props) => {
 
     useEffect(() => {
         if (props.modalEditOpen) {
-            app003p03ValidInput.resetForm()
-            app003p03ValidInput.setFieldValue("clusterId", props.app003ClusterEditData.clusterId)
-            app003p03ValidInput.setFieldValue("clusterName", props.app003ClusterEditData.clusterName)
-
+            formik.resetForm({
+                values: {
+                    clusterId: props.app003ClusterEditData.clusterId,
+                    clusterName: props.app003ClusterEditData.clusterName,
+                }
+            })
         }
     }, [props.modalEditOpen])
 
@@ -27,9 +29,10 @@ const MasterClusterEdit = (props) => {
     }
 
     // Validation Form
-    const app003p03ValidInput = useFormik({
+    const formik = useFormik({
         initialValues:
         {
+            clusterId: "",
             clusterName: "",
         },
         validationSchema: Yup.object
@@ -56,105 +59,102 @@ const MasterClusterEdit = (props) => {
                     clusterName: param.clusterName,
                 })
             if (response.status === 200) {
-                toast.success("Cluster Has Been Successfully Updated.", { id: toastId })
+                toast.success("Cluster updated successfully.", { id: toastId })
                 props.refreshTable();
                 handleClose()
             }
         } catch (error) {
-            toast.error(error?.response?.data?.message || "System is Unavailable. Please Try Again Later.", { id: toastId })
-
+            toast.error(error?.response?.data?.message || "System is unavailable, please try again later.", { id: toastId })
         } finally {
             setLoadingSpinner(false)
         }
-    })
+    }, [])
 
     return (
-        <React.Fragment>
-            <Dialog
-                open={props.modalEditOpen}
-                onOpenChange={(open) => { if (!open) handleClose() }}
+        <Dialog
+            open={props.modalEditOpen}
+            onOpenChange={(open) => { if (!open) handleClose() }}
+        >
+            <DialogContent
+                className="sm:max-w-md"
+                onInteractOutside={(e) => e.preventDefault()}
+                onOpenAutoFocus={(e) => e.preventDefault()}
             >
-                <DialogContent
-                    className="sm:max-w-md"
-                    onInteractOutside={(e) => e.preventDefault()}
-                    onOpenAutoFocus={(e) => e.preventDefault()}
+                <DialogHeader>
+                    <DialogTitle>Edit Cluster</DialogTitle>
+                    <DialogDescription>Update the cluster information below
+                    </DialogDescription>
+                </DialogHeader>
+
+                <form
+                    onSubmit={formik.handleSubmit}
+                    className="flex flex-col gap-6"
                 >
-                    <DialogHeader>
-                        <DialogTitle>Edit Cluster</DialogTitle>
-                        <DialogDescription>Update the cluster information below
-                        </DialogDescription>
-                    </DialogHeader>
-
-                    <form
-                        onSubmit={app003p03ValidInput.handleSubmit}
-                        className="flex flex-col gap-6"
-                    >
-                        <FieldGroup className="gap-2">
-                            <Field className="gap-2">
-                                <FieldLabel>Cluster Id</FieldLabel>
-                                <InputGroup className="overflow-hidden">
-                                    <InputGroupInput
-                                        id="clusterId"
-                                        name="clusterId"
-                                        type="text"
-                                        value={app003p03ValidInput.values.clusterId}
-                                        onChange={app003p03ValidInput.handleChange}
-                                        onBlur={app003p03ValidInput.handleBlur}
-                                        aria-invalid={app003p03ValidInput.touched.clusterId && !!app003p03ValidInput.errors.clusterId}
-                                        disabled
-                                    />
-                                </InputGroup>
-                                {app003p03ValidInput.touched.clusterId && app003p03ValidInput.errors.clusterId && (
-                                    <FieldDescription className="text-xs text-destructive">{app003p03ValidInput.errors.clusterId}</FieldDescription>
-                                )}
-                            </Field>
-
-                            <Field className="gap-2">
-                                <FieldLabel>Cluster Name</FieldLabel>
-                                <InputGroup className="overflow-hidden">
-                                    <InputGroupInput
-                                        id="clusterName"
-                                        name="clusterName"
-                                        type="text"
-                                        placeholder="Enter cluster name"
-                                        value={app003p03ValidInput.values.clusterName}
-                                        onChange={app003p03ValidInput.handleChange}
-                                        onBlur={app003p03ValidInput.handleBlur}
-                                        aria-invalid={app003p03ValidInput.touched.clusterName && !!app003p03ValidInput.errors.clusterName}
-                                    />
-                                </InputGroup>
-                                {app003p03ValidInput.touched.clusterName && app003p03ValidInput.errors.clusterName && (
-                                    <FieldDescription className="text-xs text-destructive">{app003p03ValidInput.errors.clusterName}</FieldDescription>
-                                )}
-                            </Field>
-                        </FieldGroup>
-
-                        <DialogFooter className="flex-row gap-2">
-                            <DialogClose asChild>
-                                <Button
-                                    variant="outline"
-                                    className="flex-1"
-                                    onClick={handleClose}
-                                >
-                                    Cancel
-                                </Button>
-                            </DialogClose>
-                            <Button
-                                type="submit"
-                                className="flex-1"
-                                disabled={loadingSpinner}
-                            >
-                                <Spinner
-                                    data-icon="inline-start"
-                                    className={loadingSpinner ? "flex" : 'hidden'}
+                    <FieldGroup className="gap-2">
+                        <Field className="gap-2">
+                            <FieldLabel>Cluster Id</FieldLabel>
+                            <InputGroup className="overflow-hidden">
+                                <InputGroupInput
+                                    id="clusterId"
+                                    name="clusterId"
+                                    type="text"
+                                    value={formik.values.clusterId}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    aria-invalid={formik.touched.clusterId && !!formik.errors.clusterId}
+                                    disabled
                                 />
-                                {loadingSpinner ? "Saving..." : "Save Changes"}
+                            </InputGroup>
+                            {formik.touched.clusterId && formik.errors.clusterId && (
+                                <FieldDescription className="text-xs text-destructive">{formik.errors.clusterId}</FieldDescription>
+                            )}
+                        </Field>
+
+                        <Field className="gap-2">
+                            <FieldLabel>Cluster Name</FieldLabel>
+                            <InputGroup className="overflow-hidden">
+                                <InputGroupInput
+                                    id="clusterName"
+                                    name="clusterName"
+                                    type="text"
+                                    placeholder="Enter cluster name"
+                                    value={formik.values.clusterName}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    aria-invalid={formik.touched.clusterName && !!formik.errors.clusterName}
+                                />
+                            </InputGroup>
+                            {formik.touched.clusterName && formik.errors.clusterName && (
+                                <FieldDescription className="text-xs text-destructive">{formik.errors.clusterName}</FieldDescription>
+                            )}
+                        </Field>
+                    </FieldGroup>
+
+                    <DialogFooter className="flex-row gap-2">
+                        <DialogClose asChild>
+                            <Button
+                                variant="outline"
+                                className="flex-1"
+                                onClick={handleClose}
+                            >
+                                Cancel
                             </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
-        </React.Fragment>
+                        </DialogClose>
+                        <Button
+                            type="submit"
+                            className="flex-1"
+                            disabled={loadingSpinner}
+                        >
+                            <Spinner
+                                data-icon="inline-start"
+                                className={loadingSpinner ? "flex" : 'hidden'}
+                            />
+                            {loadingSpinner ? "Saving..." : "Save Changes"}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     )
 }
 
