@@ -39,7 +39,7 @@ const MasterClusterEdit = (props) => {
             }),
 
         onSubmit: async (values, { setSubmitting }) => {
-            toast.dismissAll()
+            toast.dismiss()
             setSubmitting(true)
             setLoadingSpinner(true)
             await EditClusterAction(values)

@@ -292,7 +292,7 @@ const MasterDevice = () => {
     }
     const app004HandleDeleteDevice = () => {
         if (app004DeviceDeleteData.deviceId) {
-            toast.dismissAll()
+            toast.dismiss()
             deleteDeviceAction(app004DeviceDeleteData)
         }
     }
