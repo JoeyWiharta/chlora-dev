@@ -197,8 +197,8 @@ const MasterCluster = () => {
 
     return (
         <RootPageCustom>
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between px-6 mb-2">
+            <div className="flex flex-col gap-2  px-3">
+                <div className="flex items-center justify-between mb-2">
                     <div>
                         <h1 className="text-xl font-semibold">Cluster Management</h1>
                         <p className="text-sm text-muted-foreground">Manage and monitor system clusters</p>
