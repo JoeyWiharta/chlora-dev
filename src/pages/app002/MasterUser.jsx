@@ -170,8 +170,8 @@ const MasterUser = () => {
         setLoading(true);
         try {
             const response = await (tab === "active" ? getUser(param) : getUserDeleted(param));
-            setApp002UserData(response?.data?.users ?? []);
-            setApp002UserTotalData(response?.data?.countData ?? 0);
+            setApp002UserData(response?.data?.content ?? []);
+            setApp002UserTotalData(response?.data?.totalElements ?? 0);
             app002SetTotalPage(response?.data?.totalPages ?? 0);
         } catch {
             toast.error("System is unavailable, please try again later.");

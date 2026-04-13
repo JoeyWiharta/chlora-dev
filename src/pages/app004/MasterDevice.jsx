@@ -163,7 +163,7 @@ const MasterDevice = () => {
         try {
             const response = await getDevice(param);
             setApp004DeviceData(response?.data?.devices ?? []);
-            setApp004DeviceTotalData(response?.data?.countData ?? 0);
+            setApp004DeviceTotalData(response?.data?.totalElements ?? 0);
             app004SetTotalPage(response?.data?.totalPages ?? 0);
         } catch (error) {
             toast.error("System is unavailable, please try again later.");
