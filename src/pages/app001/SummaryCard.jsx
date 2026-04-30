@@ -46,16 +46,16 @@ const SummaryCard = (props) => {
                     </div>
                     <div className="flex items-end gap-4">
                         <p className="text-3xl font-semibold leading-none">
-                            {props.dailyAnomalyData?.today?.current ?? 0}
+                            {props.dailyAnomalyCurrent ?? 0}
                         </p>
-                        <span className={`flex items-center gap-1 text-xs px-2 py-1 rounded-lg font-medium ${props.dailyAnomalyGrowthFlag === "increase" ? "bg-danger/10 text-danger" :
-                            props.dailyAnomalyGrowthFlag === "decrease" ? "bg-success/10 text-success" :
+                        <span className={`flex items-center gap-1 text-xs px-2 py-1 rounded-lg font-medium ${props.dailyAnomalyGrowth > 0 ? "bg-danger/10 text-danger" :
+                            props.dailyAnomalyGrowth < 0 ? "bg-success/10 text-success" :
                                 "bg-muted text-muted-foreground"
                             }`}>
-                            {props.dailyAnomalyGrowthFlag === "increase" ? <TrendingUp size={12} /> :
-                                props.dailyAnomalyGrowthFlag === "decrease" ? <TrendingDown size={12} /> :
+                            {props.dailyAnomalyGrowth > 0 ? <TrendingUp size={12} /> :
+                                props.dailyAnomalyGrowth < 0 ? <TrendingDown size={12} /> :
                                     <span className="w-3 h-px bg-muted-foreground rounded" />}
-                            {props.dailyAnomalyGrowthFlag === "neutral" ? "Same as yesterday" : `${Math.abs(props.dailyAnomalyGrowth)} from yesterday`}
+                            {props.dailyAnomalyGrowth == 0 ? "Same as yesterday" : `${props.dailyAnomalyGrowth} from yesterday`}
                         </span>
                     </div>
                 </CardContent>
@@ -72,16 +72,16 @@ const SummaryCard = (props) => {
                     </div>
                     <div className="flex items-end gap-4">
                         <p className="text-3xl font-semibold leading-none">
-                            {props.weeklyAnomalyData?.thisWeek?.current ?? 0}
+                            {props.weeklyAnomalyCurrent ?? 0}
                         </p>
-                        <span className={`flex items-center gap-1 text-xs px-2 py-1 rounded-lg font-medium ${props.weeklyAnomalyGrowthFlag === "increase" ? "bg-danger/10 text-danger" :
-                            props.weeklyAnomalyGrowthFlag === "decrease" ? "bg-success/10 text-success" :
+                        <span className={`flex items-center gap-1 text-xs px-2 py-1 rounded-lg font-medium ${props.weeklyAnomalyGrowth > 0 ? "bg-danger/10 text-danger" :
+                            props.weeklyAnomalyGrowth < 0 ? "bg-success/10 text-success" :
                                 "bg-muted text-muted-foreground"
                             }`}>
-                            {props.weeklyAnomalyGrowthFlag === "increase" ? <TrendingUp size={12} /> :
-                                props.weeklyAnomalyGrowthFlag === "decrease" ? <TrendingDown size={12} /> :
+                            {props.weeklyAnomalyGrowth > 0 ? <TrendingUp size={12} /> :
+                                props.weeklyAnomalyGrowth < 0 ? <TrendingDown size={12} /> :
                                     <span className="w-3 h-px bg-muted-foreground rounded" />}
-                            {props.weeklyAnomalyGrowthFlag === "neutral" ? "Same as last week" : `${Math.abs(props.weeklyGrowth)} from last week`}
+                            {props.weeklyAnomalyGrowth == 0 ? "Same as yesterday" : `${props.weeklyAnomalyGrowth} from last week`}
                         </span>
                     </div>
                 </CardContent>
