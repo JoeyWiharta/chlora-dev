@@ -25,8 +25,11 @@ const Dashboard = () => {
     const [weeklyAnomalyData, setWeeklyAnomalyData] = useState([])
     const [weeklyAnomalyGrowth, setWeeklyAnomalyGrowth] = useState(0)
 
-
+    // Last Detected Anomaly 
     const [latestAnomalyData, setLatestAnomalyData] = useState([])
+
+    // Pot List
+    const [potData, setPotData] = useState([])
 
     // -------------------- Listen SSE Subscribe Dashboard -------------------- //
     useEffect(() => {
@@ -75,6 +78,10 @@ const Dashboard = () => {
         setWeeklyAnomalyData(dashboardData?.anomalySummary?.thisWeek || null)
         setWeeklyAnomalyGrowth(dashboardData?.anomalySummary?.thisWeek?.current - dashboardData?.anomalySummary?.thisWeek?.previous)
 
+        setLatestAnomalyData(dashboardData?.anomalySummary?.lastDetected || null)
+
+        setPotData(dashboardData?.pots || [])
+
     }, [dashboardData])
 
 
@@ -87,33 +94,26 @@ const Dashboard = () => {
             >
                 {/* Main Wrapper */}
                 <div className={`${app001p01Page ? "flex" : "hidden"} flex-col flex-1 gap-6 bg-gray-800`}>
-                    <SummaryCard
-                        potOnline={potOverviewData?.onlineCount}
-                        potOffline={potOverviewData?.offlineCount}
+                    <div className="flex-none">
+                        <SummaryCard
+                            potOnline={potOverviewData?.onlineCount}
+                            potOffline={potOverviewData?.offlineCount}
 
-                        dailyAnomalyCurrent={dailyAnomalyData?.current}
-                        dailyAnomalyPrevious={dailyAnomalyData?.previous}
-                        dailyAnomalyGrowth={dailyAnomalyGrowth}
+                            dailyAnomalyCurrent={dailyAnomalyData?.current}
+                            dailyAnomalyPrevious={dailyAnomalyData?.previous}
+                            dailyAnomalyGrowth={dailyAnomalyGrowth}
 
-                        weeklyAnomalyCurrent={weeklyAnomalyData?.current}
-                        weeklyAnomalyPrevious={weeklyAnomalyData?.previous}
-                        weeklyAnomalyGrowth={weeklyAnomalyGrowth}
+                            weeklyAnomalyCurrent={weeklyAnomalyData?.current}
+                            weeklyAnomalyPrevious={weeklyAnomalyData?.previous}
+                            weeklyAnomalyGrowth={weeklyAnomalyGrowth}
 
-                    // dailyAnomalyDataToday={dailyAnomalyData}
-                    // dailyAnomalyDataYesterday={}
-                    />
+                            latestAnomalyData={latestAnomalyData}
+                        />
+                    </div>
 
-
-
-
-                    {/* Layout card agak eror bug */}
-                    {/* Mapping show for 4 card by data */}
-
-                    {/* <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"> */}
-                    <PotCard
-                        potData={[]}
-                    />
-                    {/* </div> */}
+                    <div className="flex-1 min-h-0">
+                        <PotCard potData={potData} />
+                    </div>
                 </div>
 
 

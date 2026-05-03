@@ -8,7 +8,7 @@ const ITEMS_PER_PAGE = 4
 
 const PotCard = ({ potData }) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const potList = potData?.potList ?? []
+    const potList = potData ?? []
 
     const totalPages = Math.ceil(potList.length / ITEMS_PER_PAGE)
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
@@ -22,11 +22,11 @@ const PotCard = ({ potData }) => {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 h-full overflow-y-auto bg-amber-200">
 
             {/* Grid Cards */}
             {currentItems.map((pot) => (
-                <Card key={pot.id} className="flex w-full">
+                <Card key={pot.id} className="flex w-full h-full">
                     <CardContent className="flex flex-col gap-2 pt-4 w-full">
                         <div className="flex justify-end">
                             <Wifi className={pot.status === "online" ? "text-green-500" : "text-gray-400"} />
@@ -45,7 +45,7 @@ const PotCard = ({ potData }) => {
                             <Card className="flex flex-row items-center gap-2 px-3 py-2">
                                 <Thermometer size={14} className="text-orange-400 shrink-0" />
                                 <span className="text-xs">Temp</span>
-                                <span className="text-xs font-medium ml-auto">{pot.temp}°C</span>
+                                <span className="text-xs font-medium ml-auto">{pot.temperature}°C</span>
                             </Card>
                             <Card className="flex flex-row items-center gap-2 px-3 py-2">
                                 <Droplet size={14} className="text-blue-400 shrink-0" />
