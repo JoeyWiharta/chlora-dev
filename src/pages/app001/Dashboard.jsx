@@ -19,11 +19,9 @@ const Dashboard = () => {
 
     // Daily Anomaly Card
     const [dailyAnomalyData, setDailyAnomalyData] = useState([])
-    const [dailyAnomalyGrowth, setDailyAnomalyGrowth] = useState(0)
 
     // Weekly Anomaly Card
     const [weeklyAnomalyData, setWeeklyAnomalyData] = useState([])
-    const [weeklyAnomalyGrowth, setWeeklyAnomalyGrowth] = useState(0)
 
     // Last Detected Anomaly 
     const [latestAnomalyData, setLatestAnomalyData] = useState([])
@@ -73,10 +71,8 @@ const Dashboard = () => {
         setPotOverviewData(dashboardData?.potStatus || null)
 
         setDailyAnomalyData(dashboardData?.anomalySummary?.today || null)
-        setDailyAnomalyGrowth(dashboardData?.anomalySummary?.today?.current - dashboardData?.anomalySummary?.today?.previous)
 
         setWeeklyAnomalyData(dashboardData?.anomalySummary?.thisWeek || null)
-        setWeeklyAnomalyGrowth(dashboardData?.anomalySummary?.thisWeek?.current - dashboardData?.anomalySummary?.thisWeek?.previous)
 
         setLatestAnomalyData(dashboardData?.anomalySummary?.lastDetected || null)
 
@@ -93,7 +89,7 @@ const Dashboard = () => {
                 desc={"Monitor your plant pots in real-time"}
             >
                 {/* Main Wrapper */}
-                <div className={`${app001p01Page ? "flex" : "hidden"} flex-col flex-1 gap-6 bg-gray-800`}>
+                <div className={`${app001p01Page ? "flex" : "hidden"} flex-col flex-1 gap-6 `}>
                     <div className="flex-none">
                         <SummaryCard
                             potOnline={potOverviewData?.onlineCount}
@@ -101,11 +97,9 @@ const Dashboard = () => {
 
                             dailyAnomalyCurrent={dailyAnomalyData?.current}
                             dailyAnomalyPrevious={dailyAnomalyData?.previous}
-                            dailyAnomalyGrowth={dailyAnomalyGrowth}
 
                             weeklyAnomalyCurrent={weeklyAnomalyData?.current}
                             weeklyAnomalyPrevious={weeklyAnomalyData?.previous}
-                            weeklyAnomalyGrowth={weeklyAnomalyGrowth}
 
                             latestAnomalyData={latestAnomalyData}
                         />

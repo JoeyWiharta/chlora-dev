@@ -22,7 +22,7 @@ const PotCard = ({ potData }) => {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 h-full overflow-y-auto bg-amber-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 h-full overflow-y-auto ">
 
             {/* Grid Cards */}
             {currentItems.map((pot) => (
