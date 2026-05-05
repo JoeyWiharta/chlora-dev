@@ -8,22 +8,11 @@ import SummaryCard from "./SummaryCard";
 const Dashboard = () => {
     const { loginStatus } = useAuth()
     const [app001p01Page, setApp001p01Page] = useState(true);
-
     const [dashboardData, setDashboardData] = useState([])
-
-    // Pot Overview Card
     const [potOverviewData, setPotOverviewData] = useState([])
-
-    // Daily Anomaly Card
     const [dailyAnomalyData, setDailyAnomalyData] = useState([])
-
-    // Weekly Anomaly Card
     const [weeklyAnomalyData, setWeeklyAnomalyData] = useState([])
-
-    // Last Detected Anomaly 
     const [latestAnomalyData, setLatestAnomalyData] = useState([])
-
-    // Pot List
     const [potData, setPotData] = useState([])
 
     // -------------------- Listen SSE Subscribe Dashboard -------------------- //
@@ -78,7 +67,6 @@ const Dashboard = () => {
                 title={"Dashboard"}
                 desc={"Monitor your plant pots in real-time"}
             >
-                {/* Main Wrapper */}
                 <div className={`${app001p01Page ? "flex" : "hidden"} flex-col flex-1 gap-6 `}>
                     <div className="flex-none">
                         <SummaryCard
@@ -88,10 +76,12 @@ const Dashboard = () => {
                             latestAnomalyData={latestAnomalyData}
                         />
                     </div>
-
                     <div className="flex-1 min-h-0">
-                        <PotCard potData={potData} />
+                        <PotCard
+                            potData={potData}
+                        />
                     </div>
+                    
                 </div>
             </RootPageCustom >
         </React.Fragment >

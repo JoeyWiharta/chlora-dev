@@ -1,124 +1,148 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Battery, ChevronLeft, ChevronRight, Droplet, Sprout, Thermometer, Wifi } from "lucide-react"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Battery, BatteryFull, BatteryLow, BatteryMedium, ChevronLeft, ChevronRight, Circle, CircleOff, Clock, Droplet, SignalZero, Sprout, Thermometer } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import potDashboard from "../../assets/images/potDashboard.webp"
-import { useState } from "react"
-
-const ITEMS_PER_PAGE = 4
+import PropTypes from "prop-types"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Pagination } from "swiper/modules"
+import "swiper/css"
+import "swiper/css/pagination"
+import { useRef } from "react"
+import { formatTimeStampFull } from "@/components/common/Regex"
 
 const PotCard = (props) => {
-    console.log(props.potData)
-    const [currentPage, setCurrentPage] = useState(1)
     const potList = props.potData ?? []
+    const swiperRef = useRef(null)
 
-    const totalPages = Math.ceil(potList.length / ITEMS_PER_PAGE)
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-    const currentItems = potList.slice(startIndex, startIndex + ITEMS_PER_PAGE)
-
-    const getPageNumbers = () => {
-        if (totalPages <= 5) return Array.from({ length: totalPages }, (_, i) => i + 1)
-        if (currentPage <= 3) return [1, 2, 3, 4, "...", totalPages]
-        if (currentPage >= totalPages - 2) return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages]
-        return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages]
+    const batteryIcon = (level) => {
+        if (level <= 10) return (
+            <div className="rounded-lg bg-danger/10 p-1.5">
+                <BatteryLow size={20} className="text-danger shrink-0" />
+            </div>
+        )
+        if (level <= 30) return (
+            <div className="rounded-lg bg-warning/10 p-1.5">
+                <BatteryMedium size={20} className="text-warning shrink-0" />
+            </div>
+        )
+        if (level <= 70) return (
+            <div className="rounded-lg bg-success/10 p-1.5">
+                <BatteryFull size={20} className="text-success shrink-0" />
+            </div>
+        )
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 h-full overflow-y-auto ">
+        <div className="flex flex-col h-full gap-3">
 
-            {/* Grid Cards */}
-            {currentItems.map((pot) => (
-                <Card key={pot.id} className="flex w-full h-full">
-                    <CardContent className="flex flex-col gap-2 pt-4 w-full">
-                        <div className="flex justify-end">
-                            <Wifi className={pot.status === "online" ? "text-green-500" : "text-gray-400"} />
-                        </div>
-
-                        <div className="flex justify-center">
-                            <img src={potDashboard} className="h-35 w-25" />
-                        </div>
-
-                        <div className="text-center">
-                            <p className="font-semibold text-sm">{pot.id}</p>
-                            <p className="text-xs text-muted-foreground">{pot.status}</p>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2">
-                            <Card className="flex flex-row items-center gap-2 px-3 py-2">
-                                <Thermometer size={14} className="text-orange-400 shrink-0" />
-                                <span className="text-xs">Temp</span>
-                                <span className="text-xs font-medium ml-auto">{pot.temperature}°C</span>
-                            </Card>
-                            <Card className="flex flex-row items-center gap-2 px-3 py-2">
-                                <Droplet size={14} className="text-blue-400 shrink-0" />
-                                <span className="text-xs">Humidity</span>
-                                <span className="text-xs font-medium ml-auto">{pot.humidity}%</span>
-                            </Card>
-                            <Card className="flex flex-row items-center gap-2 px-3 py-2">
-                                <Sprout size={14} className="text-green-500 shrink-0" />
-                                <span className="text-xs">Soil</span>
-                                <span className="text-xs font-medium ml-auto">{pot.soilMoisture}%</span>
-                            </Card>
-                            <Card className="flex flex-row items-center gap-2 px-3 py-2">
-                                <Battery size={14} className="text-yellow-400 shrink-0" />
-                                <span className="text-xs">Battery</span>
-                                <span className="text-xs font-medium ml-auto">{pot.battery}%</span>
-                            </Card>
-                        </div>
-
-                        <Button variant="outline" className="w-full justify-between px-4"
-                            onClick={() => alert("Feature will be available soon")}
-                        >
-                            View Detail
-                            <ChevronRight size={14} />
-                        </Button>
-                    </CardContent>
-                </Card>
-            ))}
-
-            {/* Pagination */}
-            <div className="col-span-full flex items-center justify-between px-2">
-                <p className="text-sm text-muted-foreground">
-                    Showing {startIndex + 1}–{Math.min(startIndex + ITEMS_PER_PAGE, potList.length)} of {potList.length} pots
-                </p>
-
-                <div className="flex items-center gap-1">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setCurrentPage((p) => p - 1)}
-                        disabled={currentPage === 1}
-                    >
+            <div className="flex items-center justify-between px-2">
+                <span className="text-base font-medium text-muted-foreground">Pot available</span>
+                <div className="flex items-center gap-2">
+                    <Button variant="outline" size="icon" onClick={() => swiperRef.current?.slidePrev()}>
                         <ChevronLeft size={16} />
                     </Button>
-
-                    {getPageNumbers().map((page, index) =>
-                        page === "..." ? (
-                            <span key={`ellipsis-${index}`} className="px-2 text-sm text-muted-foreground">...</span>
-                        ) : (
-                            <Button
-                                key={page}
-                                variant={currentPage === page ? "default" : "outline"}
-                                size="icon"
-                                onClick={() => setCurrentPage(page)}
-                                className="w-8 h-8 text-sm"
-                            >
-                                {page}
-                            </Button>
-                        )
-                    )}
-
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => setCurrentPage((p) => p + 1)}
-                        disabled={currentPage === totalPages}
-                    >
+                    <Button variant="outline" size="icon" onClick={() => swiperRef.current?.slideNext()}>
                         <ChevronRight size={16} />
                     </Button>
                 </div>
             </div>
+
+            <Swiper
+                modules={[Pagination]}
+                onSwiper={(swiper) => (swiperRef.current = swiper)}
+                slidesPerView={1}
+                spaceBetween={16}
+                pagination={{ clickable: true }}
+                breakpoints={{ 768: { slidesPerView: 2 }, 1200: { slidesPerView: 4 } }}
+                className="w-full swiper-cards-container"
+            >
+                {potList.map((pot) => {
+                    const isMonitored = !!pot.lastUpdated
+
+                    return (
+                        <SwiperSlide key={pot.potId}>
+                            <Card className="flex flex-col w-full rounded-2xl border border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+                                <CardHeader className="flex flex-row justify-between items-center">
+                                    {isMonitored ? (
+                                        <div className="flex flex-row items-center gap-1.5 text-muted-foreground">
+                                            <Clock size={12} className="shrink-0" />
+                                            <span className="text-xs">Last updated {formatTimeStampFull(pot.lastUpdated)}</span>
+                                        </div>
+                                    ) : (
+                                        <span className="text-xs text-muted-foreground italic">Never connected</span>
+                                    )}
+                                    <div className="flex flex-row items-center gap-1.5">
+                                        <Circle size={12} className={`shrink-0 ${isMonitored ? pot.isOnline ? "text-success fill-success" : "text-danger fill-danger" : "text-muted-foreground fill-muted-foreground"}`} />
+                                        <span className={`text-xs font-medium ${isMonitored ? pot.isOnline ? "text-success" : "text-danger" : "text-muted-foreground"}`}>
+                                            {isMonitored ? pot.isOnline ? "Online" : "Offline" : "Inactive"}
+                                        </span>
+                                    </div>
+                                </CardHeader>
+
+                                <CardContent className="flex flex-col gap-4">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <img src={potDashboard} className="h-35 w-30" />
+                                        <span className="font-semibold text-base">{pot.potName}</span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div className="flex flex-row items-center gap-3 bg-muted/50 rounded-xl px-4 py-5">
+                                            <div className="rounded-lg bg-warning/10 p-1.5">
+                                                <Thermometer size={20} className="text-warning shrink-0" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-semibold">{pot.temperature}°C</span>
+                                                <span className="text-xs text-muted-foreground">Temperature</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-row items-center gap-3 bg-muted/50 rounded-xl px-4 py-5">
+                                            <div className="rounded-lg bg-info/10 p-1.5">
+                                                <Droplet size={20} className="text-info shrink-0" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-semibold">{pot.humidity}%</span>
+                                                <span className="text-xs text-muted-foreground">Humidity</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-row items-center gap-3 bg-muted/50 rounded-xl px-4 py-5">
+                                            <div className="rounded-lg bg-success/10 p-1.5">
+                                                <Sprout size={20} className="text-success shrink-0" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-semibold">{pot.soilMoisture}%</span>
+                                                <span className="text-xs text-muted-foreground">Soil Moisture</span>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-row items-center gap-3 bg-muted/50 rounded-xl px-4 py-5">
+                                            {batteryIcon(pot.battery)}
+                                            <div className="flex flex-col">
+                                                <span className="text-sm font-semibold">{pot.battery}%</span>
+                                                <span className="text-xs text-muted-foreground">Battery</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <Button variant="outline" className="w-full justify-between"
+                                        onClick={() => alert("Feature will be available soon")}
+                                    >
+                                        View Detail
+                                        <ChevronRight size={14} />
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        </SwiperSlide>
+                    )
+                })}
+            </Swiper>
         </div>
     )
 }
+
+PotCard.propTypes = {
+    potData: PropTypes.any,
+};
 
 export default PotCard

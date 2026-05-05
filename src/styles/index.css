@@ -201,3 +201,7 @@ body {
     opacity: 1;
     background: transparent !important;
 }
+
+.swiper-cards-container {
+    overflow: visible !important;
+}

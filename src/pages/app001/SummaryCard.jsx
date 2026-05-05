@@ -102,15 +102,10 @@ const SummaryCard = (props) => {
         }
     }, [props.weeklyAnomalyData])
 
-    const latestAnomalyData = useMemo(() => {
-        const location = props.latestAnomalyData?.potName ?? "-"
-        const time = props.latestAnomalyData?.timestamp ?? "-"
-
-        return {
-            latestLocation: location,
-            latestTime: time,
-        }
-    }, [props.latestAnomalyData, tickTime])
+    const latestAnomalyData = {
+        latestLocation: props.latestAnomalyData?.potName ?? "-",
+        latestTime: props.latestAnomalyData?.timestamp ?? "-"
+    }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -168,8 +163,6 @@ const SummaryCard = (props) => {
                 </CardContent>
             </Card>
 
-
-            {/* Daily Anomaly */}
             <Card className="rounded-2xl border border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 py-5 gap-2">
                 <CardHeader className="flex justify-between items-center text-muted-foreground font-medium">
                     <span>Daily Anomaly</span>
@@ -221,7 +214,6 @@ const SummaryCard = (props) => {
                 </CardContent>
             </Card>
 
-            {/* Weekly Anomaly */}
             <Card className="rounded-2xl border border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 py-5 gap-2">
                 <CardHeader className="flex justify-between items-center text-muted-foreground font-medium">
                     <span>Weekly Anomaly</span>
@@ -272,7 +264,6 @@ const SummaryCard = (props) => {
                 </CardContent>
             </Card>
 
-            {/* Latest Anomaly */}
             <Card className="rounded-2xl border border-border shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 py-5 gap-2">
                 <CardHeader className="flex justify-between items-center text-muted-foreground font-medium">
                     <span>Latest Anomaly</span>
@@ -286,7 +277,7 @@ const SummaryCard = (props) => {
                         <div className="flex flex-col">
                             <span className="text-sm text-muted-foreground">Location</span>
 
-                            <span className="text-lg font-semibold">
+                            <span className="text-base font-semibold">
                                 {latestAnomalyData.latestLocation ?? "-"}
                             </span>
                         </div>
@@ -295,7 +286,7 @@ const SummaryCard = (props) => {
 
                         <div className="flex flex-col">
                             <span className="text-sm text-muted-foreground">Time</span>
-                            <span className="text-lg font-medium">
+                            <span className="text-base font-medium">
                                 {formatTimeStampFull(latestAnomalyData.latestTime ?? "-", tickTime)}
                             </span>
                         </div>
