@@ -277,7 +277,7 @@ const SummaryCard = (props) => {
                         <div className="flex flex-col">
                             <span className="text-sm text-muted-foreground">Location</span>
 
-                            <span className="text-base font-semibold">
+                            <span className="text-sm font-semibold">
                                 {latestAnomalyData.latestLocation ?? "-"}
                             </span>
                         </div>
@@ -286,7 +286,7 @@ const SummaryCard = (props) => {
 
                         <div className="flex flex-col">
                             <span className="text-sm text-muted-foreground">Time</span>
-                            <span className="text-base font-medium">
+                            <span className="lowercase">
                                 {formatTimeStampFull(latestAnomalyData.latestTime ?? "-", tickTime)}
                             </span>
                         </div>

@@ -38,30 +38,18 @@ export const formatTimeStampFull = (timestamp, _tick) => {
     const diffMin = Math.floor(diffSec / 60)
     const diffHour = Math.floor(diffMin / 60)
     const diffDay = Math.floor(diffHour / 24)
+    const diffYear = Math.floor(diffDay / 365)
 
     if (diffSec < 60) return "Just now"
     if (diffMin < 60) return `${diffMin} min ago`
     if (diffHour < 24) return `${diffHour} hr ago`
 
-    const timeStr = date.toLocaleTimeString("en-US", {
-        hour: "2-digit", minute: "2-digit", hour12: false
-    })
+    if (diffDay === 1) return "Yesterday"
 
-    if (diffDay === 1) return `Yesterday, ${timeStr}`
-
-    if (diffDay < 7) {
-        const dayName = date.toLocaleDateString("en-US", { weekday: "long" })
-        return `${dayName}, ${timeStr}`
-    }
-
-    const sameYear = date.getFullYear() === now.getFullYear()
-    if (sameYear) {
-        return date.toLocaleDateString("en-US", {
-            day: "numeric", month: "short"
-        }) + `, ${timeStr}`
-    }
+    if (diffYear >= 1) return `${diffYear} yr ago`
 
     return date.toLocaleDateString("en-US", {
-        day: "numeric", month: "short", year: "numeric"
+        day: "numeric",
+        month: "short"
     })
 }
