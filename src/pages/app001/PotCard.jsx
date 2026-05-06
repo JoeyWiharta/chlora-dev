@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button"
 import potDashboard from "../../assets/images/potDashboard.webp"
 import PropTypes from "prop-types"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Pagination, Mousewheel } from "swiper/modules"
 import "swiper/css"
 import "swiper/css/pagination"
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import { formatTimeStampFull } from "@/components/common/Regex"
 import { ToasterCustom } from "@/components/common/ToasterCustom"
 
@@ -32,6 +31,13 @@ const PotCard = (props) => {
             </div>
         )
     }
+
+    // Update Timestamp every minutes
+    const [tickTime, setTickTime] = useState(0)
+    useEffect(() => {
+        const interval = setInterval(() => setTickTime(t => t + 1), 60000)
+        return () => clearInterval(interval)
+    }, [])
 
     return (
         <div className="flex flex-col h-full gap-3">
@@ -73,7 +79,7 @@ const PotCard = (props) => {
                                     {isMonitored ? (
                                         <div className="flex flex-row items-center gap-1.5 text-muted-foreground">
                                             <Clock size={12} className="shrink-0" />
-                                            <span className="text-xs">Last updated {formatTimeStampFull(pot.lastUpdated)?.toLowerCase()}</span>
+                                            <span className="text-xs">Last updated {formatTimeStampFull(pot.lastUpdated, tickTime)?.toLowerCase()}</span>
                                         </div>
                                     ) : (
                                         <span className="text-xs text-muted-foreground italic">Never connected</span>
