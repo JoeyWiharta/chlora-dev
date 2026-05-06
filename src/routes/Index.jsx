@@ -9,7 +9,8 @@ const mappingMenuRoutes = (items) => items.flatMap(item => {
     } else {
         return item.component ? [{
             path: item.path,
-            component: item.component
+            component: item.component,
+            role: item.role
         }] : []
     }
 })

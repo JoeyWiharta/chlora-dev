@@ -19,10 +19,18 @@ import {
     SidebarMenuSubItem,
     useSidebar
 } from "@/components/ui/sidebar"
+import { useAuth } from "@/context/AuthContext"
+
 
 const AppSidebarContent = () => {
-    const mainMenu = MenuRoutes.filter(menu => menu.section == "main")
-    const otherMenu = MenuRoutes.filter(menu => menu.section == "others")
+    const { user } = useAuth()
+    const userRole = user?.role
+    const mainMenu = MenuRoutes
+        .filter(menu => menu.section === "main")
+        .filter(menu => !menu.role || menu.role.includes(userRole))
+    const otherMenu = MenuRoutes
+        .filter(menu => menu.section === "others")
+        .filter(menu => !menu.role || menu.role.includes(userRole))
     const location = useLocation()
     const { state } = useSidebar()
     const isCollapsed = state === "collapsed"

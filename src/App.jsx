@@ -5,8 +5,15 @@ import AuthLayout from "./layout/AuthLayout";
 import NonAuthLayout from "./layout/NonAuthLayout";
 import AuthMiddleware from "./routes/AuthMiddleware";
 import PropTypes from 'prop-types';
+import { useAuth } from "./context/AuthContext";
 
 const App = (props) => {
+  const { user } = useAuth()
+  const userRole = user?.role ?? "USER"
+
+  const filteredRoutes = authProtectedRoutes.filter(route =>
+    !route.role || route.role.includes(userRole)
+  )
 
   return (
     <Routes>
@@ -23,7 +30,7 @@ const App = (props) => {
       ))}
 
       {
-        authProtectedRoutes.map((route, idx) => (
+        filteredRoutes.map((route, idx) => (
           <Route
             key={idx}
             path={route.path}
