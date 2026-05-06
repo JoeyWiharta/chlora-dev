@@ -56,8 +56,8 @@ const PotCard = (props) => {
                 breakpoints={{
                     640: { slidesPerView: 1, centeredSlides: false },
                     840: { slidesPerView: 2, centeredSlides: false },
-                    1280: { slidesPerView: 3, centeredSlides: false },
-                    1536: { slidesPerView: 4, centeredSlides: false },
+                    1024: { slidesPerView: 3, centeredSlides: false },
+                    1440: { slidesPerView: 4, centeredSlides: false },
                 }}
                 className="w-full swiper-cards-container"
                 style={{ alignItems: "stretch" }}
