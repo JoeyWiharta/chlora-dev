@@ -76,7 +76,7 @@ const TelemetryReport = () => {
             }))
         }
     }
-    // ------------------------ Filter Fetch Telemetry Report ------------------------ //
+    // ------------------------ Filter Fetch Telemetry Report ------------------------ ///
 
     // ------------------------ Paging Fetch Telemetry Report ------------------------ //
     const handleChangePage = (newPage) => {
