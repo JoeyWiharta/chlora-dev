@@ -1,30 +1,46 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import RootPageCustom from "../../components/common/RootPageCustom";
 import TableCustom from "../../components/common/TableCustom";
-import { BatteryFull, BatteryLow, BatteryMedium, CalendarDays, Droplet, Sprout, Thermometer, Clock, Timer } from "lucide-react";
+import { BatteryFull, CalendarDays, Droplet, Eye, Sprout, Thermometer } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { handleApiError } from "@/utils/ErrorHandler";
-import { getComboPot, getTelemetryReport } from "../../utils/ListApi";
+import { getAnomalyReport, getComboPot } from "../../utils/ListApi";
 import { Badge } from "@/components/ui/badge";
 import { formatTimeStampReadable } from "@/components/common/Regex";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+const SEVERITY_OPTIONS = [
+    { value: "LOW", label: "Low" },
+    { value: "MEDIUM", label: "Medium" },
+    { value: "HIGH", label: "High" },
+    { value: "CRITICAL", label: "Critical" },
+]
 
 
 const AnomalyReport = () => {
     const [loading, setLoading] = useState(false)
-    const [app005TelemetryReportData, setApp005TelemetryReportData] = useState([]);
-    const [app005TelemetryReportTotalData, setApp005TelemetryReportTotalData] = useState(0)
-    const [app005TotalPage, app005SetTotalPage] = useState(0)
+    const [app006AnomalyReportData, setApp006AnomalyReportData] = useState([]);
+    const [app006AnomalyReportTotalData, setApp006AnomalyReportTotalData] = useState(0)
+    const [app006TotalPage, app006SetTotalPage] = useState(0)
     const [potSelected, setPotSelected] = useState("")
     const [potOption, setPotOption] = useState([])
-    const [dateRange, setDateRange] = useState({
-        from: new Date(),
-        to: new Date(),
-    })
+    const [dateRange, setDateRange] = useState({ from: new Date(), to: new Date() })
+    const [selectedRow, setSelectedRow] = useState(null)
+    const [severitySelected, setSeveritySelected] = useState("")
+    const [drawerOpen, setDrawerOpen] = useState(false)
+
+    // ------------------------ Function Drawer ------------------------ //
+    const handleOpenDrawer = (row) => {
+        setSelectedRow(row)
+        setDrawerOpen(true)
+    }
+    // ------------------------ Function Drawer ------------------------ //
 
     // ------------------------ List Combo Pot ------------------------ //
     const fetchPot = useCallback(async () => {
@@ -41,34 +57,28 @@ const AnomalyReport = () => {
     }, [])
     // ------------------------ List Combo Pot ------------------------ //
 
-    // ------------------------ Filter Fetch Telemetry Report ------------------------ //
-    const [app005TelemetryReportDataParam, setApp005TelemetryReportDataParam] = useState(
-        {
-            page: 1,
-            size: 10,
-            sort: "",
-            order: "asc",
-            dateFrom: format(dateRange.from, "yyyy-MM-dd"),
-            dateTo: format(dateRange.to, "yyyy-MM-dd"),
-        }
-    )
+    // ------------------------ Filter ------------------------ //
+    const [app006AnomalyReportDataParam, setApp006AnomalyReportDataParam] = useState({
+        page: 1,
+        size: 10,
+        sort: "",
+        order: "asc",
+        dateFrom: format(dateRange.from, "yyyy-MM-dd"),
+        dateTo: format(dateRange.to, "yyyy-MM-dd"),
+        severity: "",
+    })
 
     const handlePotChange = (e) => {
         const switchValue = e === "all" ? "" : e
         setPotSelected(e)
-        setApp005TelemetryReportDataParam(prev => ({
-            ...prev,
-            "page": 1,
-            "potId": switchValue,
-
-        }))
+        setApp006AnomalyReportDataParam(prev => ({ ...prev, page: 1, potId: switchValue }))
     }
 
     const handleDateChange = (range) => {
         if (!range) return
         setDateRange(range)
         if (range?.from && range?.to) {
-            setApp005TelemetryReportDataParam(prev => ({
+            setApp006AnomalyReportDataParam(prev => ({
                 ...prev,
                 page: 1,
                 dateFrom: format(range.from, "yyyy-MM-dd"),
@@ -76,115 +86,79 @@ const AnomalyReport = () => {
             }))
         }
     }
-    // ------------------------ Filter Fetch Telemetry Report ------------------------ //
 
-    // ------------------------ Paging Fetch Telemetry Report ------------------------ //
+    const handleSeverityChange = (e) => {
+        const switchValue = e === "all" ? "" : e
+        setSeveritySelected(e)
+        setApp006AnomalyReportDataParam(prev => ({ ...prev, page: 1, severity: switchValue }))
+    }
+    // ------------------------ Filter ------------------------ //
+
+    // ------------------------ Paging ------------------------ //
     const handleChangePage = (newPage) => {
-        setApp005TelemetryReportDataParam(prev => ({
-            ...prev,
-            page: newPage + 1
-        }));
+        setApp006AnomalyReportDataParam(prev => ({ ...prev, page: newPage + 1 }));
     };
 
     const handleChangeRowsPerPage = (newRowsPerPage) => {
-        setApp005TelemetryReportDataParam(prev => ({
-            ...prev,
-            size: newRowsPerPage,
-            page: 1
-        }));
+        setApp006AnomalyReportDataParam(prev => ({ ...prev, size: newRowsPerPage, page: 1 }));
     };
 
     const handleRequestSort = (property, order) => {
-        setApp005TelemetryReportDataParam(prev => ({
-            ...prev,
-            sort: property,
-            order: order,
-            page: 1
-        }));
+        setApp006AnomalyReportDataParam(prev => ({ ...prev, sort: property, order: order, page: 1 }));
     };
-    // ------------------------ Paging Fetch Telemetry Report ------------------------ //
+    // ------------------------ Paging ------------------------ //
 
-    // ------------------------ Column Telemetry Report ------------------------ //
-    const app005TelemetryReportColumns = useMemo(() => [
-        {
-            dataField: "id",
-            text: "Telemetry Report ID",
-            sort: true,
-            headerAlign: "center",
-            bodyAlign: 'center',
-            hidden: true,
-        },
+    // ------------------------ Columns ------------------------ //
+    const app006AnomalyReportColumns = useMemo(() => [
         {
             dataField: "potName",
             text: "Sensor Node",
-            sort: true,
+            sort: false,
             headerAlign: "center",
             bodyAlign: 'center',
             formatter: (cellContent, row) => (
                 <div className="flex flex-col text-center gap-1">
                     <span className="font-medium">{row.potName}</span>
-                    <Badge variant="outline" className="text-xs text-muted-foreground">
+                    <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground">
                         {row.deviceName}
                     </Badge>
                 </div>
             )
         },
         {
-            dataField: "temperature",
-            text: (
-                <div className="flex items-center justify-center gap-1.5">
-                    <Thermometer size={14} className="text-warning shrink-0" />
-                    <span>Temperature</span>
-                </div>
-            ),
-            sort: true,
+            dataField: "anomalyType",
+            text: "Anomaly Type",
+            sort: false,
             headerAlign: "center",
             bodyAlign: 'center',
-            formatter: (cellContent) => `${cellContent}°C`
         },
         {
-            dataField: "humidity",
-            text: (
-                <div className="flex items-center justify-center gap-1.5">
-                    <Droplet size={14} className="text-info shrink-0" />
-                    <span>Humidity</span>
-                </div>
-            ),
-            sort: true,
+            dataField: "severity",
+            text: "Severity",
+            sort: false,
             headerAlign: "center",
             bodyAlign: 'center',
-            formatter: (cellContent) => `${cellContent}%`
+            formatter: (cellContent) => {
+                switch (cellContent) {
+                    case "LOW":
+                        return <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">Low</Badge>
+                    case "MEDIUM":
+                        return <Badge className="bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300">Medium</Badge>
+                    case "HIGH":
+                        return <Badge className="bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300">High</Badge>
+                    case "CRITICAL":
+                        return <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">Critical</Badge>
+                    default:
+                        return <Badge variant="outline">{cellContent}</Badge>
+                }
+            }
         },
         {
-            dataField: "soilMoisture",
-            text: (
-                <div className="flex items-center justify-center gap-1.5">
-                    <Sprout size={14} className="text-success shrink-0" />
-                    <span>Soil Moisture</span>
-                </div>
-            ),
-            sort: true,
+            dataField: "anomalyScore",
+            text: "Anomaly Score",
+            sort: false,
             headerAlign: "center",
             bodyAlign: 'center',
-            formatter: (cellContent) => `${cellContent}%`
-        },
-        {
-            dataField: "batteryLevel",
-            text: "Battery",
-            sort: true,
-            headerAlign: "center",
-            bodyAlign: 'center',
-            formatter: (cellContent) => (
-                <div className="flex items-center justify-center gap-1.5">
-                    {cellContent <= 20
-                        ? <BatteryLow size={14} className="text-danger shrink-0" />
-                        : cellContent <= 50
-                            ? <BatteryMedium size={14} className="text-warning shrink-0" />
-                            : <BatteryFull size={14} className="text-success shrink-0" />
-                    }
-                    <span>{cellContent}%</span>
-                </div>
-            )
         },
         {
             dataField: "timestamp",
@@ -195,24 +169,33 @@ const AnomalyReport = () => {
             formatter: (cellContent) => formatTimeStampReadable(cellContent)
         },
         {
-            dataField: "latency",
-            text: "Latency",
-            sort: true,
+            dataField: "action",
+            text: "Detail",
+            sort: false,
             headerAlign: "center",
             bodyAlign: 'center',
-            formatter: (cellContent) => `${cellContent} ms`
+            formatter: (cellContent, dailyAnomalyData) => (
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button variant="outline" size="icon-sm" onClick={() => handleOpenDrawer(dailyAnomalyData)}>
+                            <Eye size={14} />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent><p>View Detail</p></TooltipContent>
+                </Tooltip>
+            )
         },
     ], []);
-    // ------------------------ Column Telemetry Report ------------------------ //
+    // ------------------------ Columns ------------------------ //
 
-    // ------------------------ Fetch List Telemetry Report ------------------------ //
-    const fetchTelemetryReport = useCallback(async (param) => {
+    // ------------------------ Fetch ------------------------ //
+    const fetchAnomalyReport = useCallback(async (param) => {
         setLoading(true);
         try {
-            const response = await getTelemetryReport(param);
-            setApp005TelemetryReportData(response?.data?.contents ?? []);
-            setApp005TelemetryReportTotalData(response?.data?.totalElements ?? 0);
-            app005SetTotalPage(response?.data?.totalPages ?? 0);
+            const response = await getAnomalyReport(param);
+            setApp006AnomalyReportData(response?.data?.contents ?? []);
+            setApp006AnomalyReportTotalData(response?.data?.totalElements ?? 0);
+            app006SetTotalPage(response?.data?.totalPages ?? 0);
         } catch (error) {
             if (handleApiError(error)) return
         } finally {
@@ -221,35 +204,14 @@ const AnomalyReport = () => {
     }, []);
 
     useEffect(() => {
-        fetchTelemetryReport(app005TelemetryReportDataParam);
-    }, [app005TelemetryReportDataParam]);
-    // ------------------------ Fetch List Telemetry Report ------------------------ //
-
-    // ------------------------ Refresh Table Telemetry Report ------------------------ //
-    const refreshTable = useCallback(() => {
-        const today = format(new Date(), "yyyy-MM-dd")
-        setPotSelected("")
-        setDateRange({
-            from: new Date(),
-            to: new Date()
-        })
-        setApp005TelemetryReportDataParam({
-            page: 1,
-            size: 10,
-            sort: "",
-            order: "asc",
-            potId: "",
-            dateFrom: today,
-            dateTo: today,
-        });
-    }, []);
-    // ------------------------ Refresh Table Telemetry Report ------------------------ //
-
+        fetchAnomalyReport(app006AnomalyReportDataParam);
+    }, [app006AnomalyReportDataParam]);
+    // ------------------------ Fetch ------------------------ //
 
     return (
         <RootPageCustom
-            title={"Sensor Data"}
-            desc={"View and analyze historical sensor data from all devices"}
+            title={"Anomaly Report"}
+            desc={"View and analyze abnormal sensor readings from all devices"}
         >
             <div className="flex flex-col gap-2 flex-1">
                 <Card>
@@ -296,20 +258,36 @@ const AnomalyReport = () => {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+
+                            <Select value={severitySelected} onValueChange={handleSeverityChange}>
+                                <SelectTrigger className="flex-1 sm:w-36 sm:flex-none">
+                                    <SelectValue placeholder="All Severity" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="all">All Severity</SelectItem>
+                                        {SEVERITY_OPTIONS.map((item) => (
+                                            <SelectItem key={item.value} value={item.value}>
+                                                {item.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <TableCustom
                             keyField="timestamp"
                             loadingData={loading}
-                            columns={app005TelemetryReportColumns}
-                            appdata={app005TelemetryReportData}
-                            appdataTotal={app005TelemetryReportTotalData}
-                            totalPage={app005TotalPage}
+                            columns={app006AnomalyReportColumns}
+                            appdata={app006AnomalyReportData}
+                            appdataTotal={app006AnomalyReportTotalData}
+                            totalPage={app006TotalPage}
                             rowsPerPageOption={[5, 10, 20, 25]}
-                            page={app005TelemetryReportDataParam.page - 1}
-                            rowsPerPage={app005TelemetryReportDataParam.size}
-                            sortField={app005TelemetryReportDataParam.sort}
-                            sortOrder={app005TelemetryReportDataParam.order}
+                            page={app006AnomalyReportDataParam.page - 1}
+                            rowsPerPage={app006AnomalyReportDataParam.size}
+                            sortField={app006AnomalyReportDataParam.sort}
+                            sortOrder={app006AnomalyReportDataParam.order}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                             onRequestSort={handleRequestSort}
@@ -318,7 +296,96 @@ const AnomalyReport = () => {
                 </Card>
             </div>
 
+            <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+                <DrawerContent className="max-h-[90vh]">
+                    <DrawerHeader>
+                        <DrawerTitle>Anomaly Detail</DrawerTitle>
+                        <div className="flex flex-col items-center gap-1 mt-1">
+                            <span className="font-medium">{selectedRow?.potName}</span>
+                            <Badge variant="outline" className="text-xs text-muted-foreground w-fit">
+                                {selectedRow?.deviceName}
+                            </Badge>
+                        </div>
+                    </DrawerHeader>
 
+                    <div className="px-4 pb-8 flex flex-col gap-4 overflow-y-auto">
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div className="flex items-center gap-3 bg-muted/70 rounded-xl p-3">
+                                <div className="rounded-lg bg-warning/10 p-1.5">
+                                    <Thermometer size={18} className="text-warning" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold">{selectedRow?.temperature}°C</span>
+                                    <span className="text-xs text-muted-foreground">Temperature</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 bg-muted/70 rounded-xl p-3">
+                                <div className="rounded-lg bg-info/10 p-1.5">
+                                    <Droplet size={18} className="text-info" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold">{selectedRow?.humidity}%</span>
+                                    <span className="text-xs text-muted-foreground">Humidity</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 bg-muted/70 rounded-xl p-3">
+                                <div className="rounded-lg bg-success/10 p-1.5">
+                                    <Sprout size={18} className="text-success" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold">{selectedRow?.soilMoisture}%</span>
+                                    <span className="text-xs text-muted-foreground">Soil Moisture</span>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 bg-muted/70 rounded-xl p-3">
+                                <div className="rounded-lg bg-muted p-1.5">
+                                    <BatteryFull size={18} className="text-muted-foreground" />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-semibold">{selectedRow?.batteryLevel}%</span>
+                                    <span className="text-xs text-muted-foreground">Battery</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col gap-2 rounded-xl border p-4">
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Anomaly Type</span>
+                                <span className="font-medium">{selectedRow?.anomalyType}</span>
+                            </div>
+                            <div className="flex justify-between text-sm items-center">
+                                <span className="text-muted-foreground">Severity</span>
+                                {(() => {
+                                    switch (selectedRow?.severity) {
+                                        case "LOW": return <Badge className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">Low</Badge>
+                                        case "MEDIUM": return <Badge className="bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300">Medium</Badge>
+                                        case "HIGH": return <Badge className="bg-orange-50 text-orange-700 dark:bg-orange-950 dark:text-orange-300">High</Badge>
+                                        case "CRITICAL": return <Badge className="bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300">Critical</Badge>
+                                        default: return <Badge variant="outline">{selectedRow?.severity}</Badge>
+                                    }
+                                })()}
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Anomaly Score</span>
+                                <span className="font-medium">{selectedRow?.anomalyScore}</span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Timestamp</span>
+                                <span className="font-medium">{formatTimeStampReadable(selectedRow?.timestamp)}</span>
+                            </div>
+                            <div className="flex justify-between text-sm">
+                                <span className="text-muted-foreground">Latency</span>
+                                <span className="font-medium">{selectedRow?.latency} ms</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </DrawerContent>
+            </Drawer>
 
         </RootPageCustom>
     );

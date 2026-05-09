@@ -115,7 +115,7 @@ const TelemetryReport = () => {
             formatter: (cellContent, row) => (
                 <div className="flex flex-col text-center gap-1">
                     <span className="font-medium">{row.potName}</span>
-                    <Badge variant="outline" className="text-xs text-muted-foreground">
+                    <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground">
                         {row.deviceName}
                     </Badge>
                 </div>
@@ -162,21 +162,16 @@ const TelemetryReport = () => {
         },
         {
             dataField: "batteryLevel",
-            text: "Battery",
+            text: (
+                <div className="flex items-center justify-center gap-1.5">
+                    <BatteryFull size={14} className="text-muted-foreground shrink-0" />
+                    <span>Battery</span>
+                </div>
+            ),
             sort: false,
             headerAlign: "center",
             bodyAlign: 'center',
-            formatter: (cellContent) => (
-                <div className="flex items-center justify-center gap-1.5">
-                    {cellContent <= 20
-                        ? <BatteryLow size={14} className="text-danger shrink-0" />
-                        : cellContent <= 50
-                            ? <BatteryMedium size={14} className="text-warning shrink-0" />
-                            : <BatteryFull size={14} className="text-success shrink-0" />
-                    }
-                    <span>{cellContent}%</span>
-                </div>
-            )
+            formatter: (cellContent) => `${cellContent}%`
         },
         {
             dataField: "timestamp",
@@ -217,30 +212,9 @@ const TelemetryReport = () => {
     }, [app005TelemetryReportDataParam]);
     // ------------------------ Fetch List Telemetry Report ------------------------ //
 
-    // ------------------------ Refresh Table Telemetry Report ------------------------ //
-    const refreshTable = useCallback(() => {
-        const today = format(new Date(), "yyyy-MM-dd")
-        setPotSelected("")
-        setDateRange({
-            from: new Date(),
-            to: new Date()
-        })
-        setApp005TelemetryReportDataParam({
-            page: 1,
-            size: 10,
-            sort: "",
-            order: "asc",
-            potId: "",
-            dateFrom: today,
-            dateTo: today,
-        });
-    }, []);
-    // ------------------------ Refresh Table Telemetry Report ------------------------ //
-
-
     return (
         <RootPageCustom
-            title={"Sensor Data"}
+            title={"Telemetry Report"}
             desc={"View and analyze historical sensor data from all devices"}
         >
             <div className="flex flex-col gap-2 flex-1">
