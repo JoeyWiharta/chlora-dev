@@ -27,6 +27,23 @@ export const formatTimeStamp = (isoString) => {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
 }
 
+// Formatter for timezone readable
+export const formatTimeStampReadable = (isoString) => {
+    if (!isoString) return ""
+
+    const date = new Date(isoString)
+    if (isNaN(date)) return ""
+
+    const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ]
+
+    const pad = (n) => String(n).padStart(2, "0")
+
+    return `${pad(date.getDate())} ${months[date.getMonth()]} ${date.getFullYear()}, ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+}
+
 //  Formatter for full day
 export const formatTimeStampFull = (timestamp, _tick) => {
     if (!timestamp || timestamp === "-") return "-"

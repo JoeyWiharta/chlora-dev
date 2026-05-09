@@ -31,8 +31,8 @@ const MenuRoutes = [
         icon: ClipboardList,
         section: "main",
         sub: [
-            { path: "/app005/analytics/sensor", title: "Sensor Data", component: LazyLoadRoutes(() => import("../pages/app005/SensorData")) },
-            { path: "/app006/analytics/anomaly", title: "Anomalies", component: LazyLoadRoutes(() => import("../pages/app006/AnomalyData")) },
+            { path: "/app005/analytics/telemetry", title: "Telemetry Reports", component: LazyLoadRoutes(() => import("../pages/app005/TelemetryReport")) },
+            { path: "/app006/analytics/anomaly", title: "Anomaly Reports", component: LazyLoadRoutes(() => import("../pages/app006/AnomalyReport")) },
         ],
     },
 ]

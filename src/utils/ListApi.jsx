@@ -31,6 +31,9 @@ export const getDevice = (params) => management.get("/devices", { params });
 export const editDevice = (deviceId, res) => management.patch(`/devices/${deviceId}`, res);
 export const deleteDevice = (deviceId) => management.delete(`/devices/${deviceId}`);
 
+// app005 - Telemetry Report
+export const getTelemetryReport = (params) => management.get("/reports/telemetry", { params });
+
 
 // Notification
 export const getNotication = () => management.get("/notifications")

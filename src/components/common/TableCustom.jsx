@@ -51,8 +51,12 @@ const TableCustom = (props) => {
         props.onRequestSort?.(field, newOrder)
     }
 
+    const visibleColumns = useMemo(() => {
+        return props.columns.filter((col) => !col.hidden)
+    }, [props.columns])
+
     const columns = useMemo(() => {
-        return props.columns.map((col) => ({
+        return visibleColumns.map((col) => ({
             id: col.dataField,
             accessorKey: col.dataField,
             header: () => {
@@ -89,7 +93,7 @@ const TableCustom = (props) => {
                 )
             },
         }))
-    }, [props.columns, sortField, sortOrder])
+    }, [visibleColumns, sortField, sortOrder])
 
     const table = useReactTable({
         data: props.appdata,
@@ -130,7 +134,7 @@ const TableCustom = (props) => {
                         {props.loadingData ? (
                             <TableRow>
                                 <TableCell
-                                    colSpan={props.columns.length}
+                                    colSpan={visibleColumns.length}
                                     className="py-40 text-center text-muted-foreground"
                                 >
                                     Loading...
@@ -139,7 +143,7 @@ const TableCustom = (props) => {
                         ) : table.getRowModel().rows.length === 0 ? (
                             <TableRow>
                                 <TableCell
-                                    colSpan={props.columns.length}
+                                    colSpan={visibleColumns.length}
                                     className="py-40 text-center"
                                 >
                                     <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
