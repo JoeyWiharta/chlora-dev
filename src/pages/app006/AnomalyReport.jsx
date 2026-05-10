@@ -62,7 +62,7 @@ const AnomalyReport = () => {
         page: 1,
         size: 10,
         sort: "",
-        order: "asc",
+        order: "desc",
         dateFrom: format(dateRange.from, "yyyy-MM-dd"),
         dateTo: format(dateRange.to, "yyyy-MM-dd"),
         severity: "",
