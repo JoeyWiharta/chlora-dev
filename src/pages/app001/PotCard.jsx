@@ -39,6 +39,37 @@ const PotCard = (props) => {
         return () => clearInterval(interval)
     }, [])
 
+    // Function Pot Status
+    const getPotStatus = (pot) => {
+        const isMonitored = !!pot.lastUpdated
+
+        if (!isMonitored) {
+            return {
+                text: "Inactive",
+                circleClass: "text-muted-foreground fill-muted-foreground",
+                textClass: "text-muted-foreground",
+            }
+        }
+
+        const diffMs = Date.now() - new Date(pot.lastUpdated).getTime()
+        const isTimeoutOffline = diffMs > 10 * 60 * 1000
+        const isOnline = pot.isOnline && !isTimeoutOffline
+
+        if (isOnline) {
+            return {
+                text: "Online",
+                circleClass: "text-success fill-success",
+                textClass: "text-success",
+            }
+        }
+
+        return {
+            text: "Offline",
+            circleClass: "text-danger fill-danger",
+            textClass: "text-danger",
+        }
+    }
+
     return (
         <div className="flex flex-col h-full gap-3">
 
@@ -71,6 +102,7 @@ const PotCard = (props) => {
             >
                 {potList.map((pot) => {
                     const isMonitored = !!pot.lastUpdated
+                    const status = getPotStatus(pot)
 
                     return (
                         <SwiperSlide key={pot.potId} className="h-auto">
@@ -85,10 +117,8 @@ const PotCard = (props) => {
                                         <span className="text-xs text-muted-foreground italic">Never connected</span>
                                     )}
                                     <div className="flex flex-row items-center gap-1.5">
-                                        <Circle size={12} className={`shrink-0 ${isMonitored ? pot.isOnline ? "text-success fill-success" : "text-danger fill-danger" : "text-muted-foreground fill-muted-foreground"}`} />
-                                        <span className={`text-xs font-medium ${isMonitored ? pot.isOnline ? "text-success" : "text-danger" : "text-muted-foreground"}`}>
-                                            {isMonitored ? pot.isOnline ? "Online" : "Offline" : "Inactive"}
-                                        </span>
+                                        <Circle size={12} className={`shrink-0 ${status.circleClass}`} />
+                                        <span className={`text-xs font-medium ${status.textClass}`}>{status.text}</span>
                                     </div>
                                 </CardHeader>
 
