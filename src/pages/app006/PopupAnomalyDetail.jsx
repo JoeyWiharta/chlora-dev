@@ -14,7 +14,7 @@ const SeverityBadge = ({ severity }) => {
     }
 }
 
-const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
+const PopupAnomalyDetail = (props) => {
 
     const batteryIcon = (level) => {
         if (level <= 20) return (
@@ -35,7 +35,7 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
     }
 
     return (
-        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+        <Dialog open={props.modalOpen} onOpenChange={props.setModalOpen}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Anomaly Detail</DialogTitle>
@@ -55,7 +55,7 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
                                     </div>
                                     <div className="flex flex-col gap-0.5">
                                         <span className="text-xs text-muted-foreground">Pot</span>
-                                        <span className="text-sm font-medium">{detailRow?.potName}</span>
+                                        <span className="text-sm font-medium">{props.detailRow?.potName}</span>
                                     </div>
                                 </div>
 
@@ -65,7 +65,7 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
                                     </div>
                                     <div className="flex flex-col gap-0.5">
                                         <span className="text-xs text-muted-foreground">Device</span>
-                                        <span className="text-sm font-medium">{detailRow?.deviceName}</span>
+                                        <span className="text-sm font-medium">{props.detailRow?.deviceName}</span>
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +81,7 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
                                         <Thermometer size={18} className="text-warning" />
                                     </div>
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-medium">{detailRow?.temperature}°C</span>
+                                        <span className="text-sm font-medium">{props.detailRow?.temperature}°C</span>
                                         <span className="text-xs text-muted-foreground">Temperature</span>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
                                         <Droplet size={18} className="text-info" />
                                     </div>
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-medium">{detailRow?.humidity}%</span>
+                                        <span className="text-sm font-medium">{props.detailRow?.humidity}%</span>
                                         <span className="text-xs text-muted-foreground">Humidity</span>
                                     </div>
                                 </div>
@@ -99,14 +99,14 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
                                         <Sprout size={18} className="text-success" />
                                     </div>
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-medium">{detailRow?.soilMoisture}%</span>
+                                        <span className="text-sm font-medium">{props.detailRow?.soilMoisture}%</span>
                                         <span className="text-xs text-muted-foreground">Soil Moisture</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3 px-4 py-3 border rounded-xl">
-                                    {batteryIcon(detailRow?.batteryLevel)}
+                                    {batteryIcon(props.detailRow?.batteryLevel)}
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-medium">{detailRow?.batteryLevel}%</span>
+                                        <span className="text-sm font-medium">{props.detailRow?.batteryLevel}%</span>
                                         <span className="text-xs text-muted-foreground">Battery</span>
                                     </div>
                                 </div>
@@ -118,23 +118,23 @@ const PopupAnomalyDetail = ({ modalOpen, setModalOpen, detailRow }) => {
                             <div className="flex flex-col rounded-xl border">
                                 <div className="flex justify-between items-center px-4 py-3 text-sm">
                                     <span className="text-muted-foreground">Anomaly Type</span>
-                                    <span className="font-medium">{detailRow?.anomalyType}</span>
+                                    <span className="font-medium">{props.detailRow?.anomalyType}</span>
                                 </div>
                                 <div className="flex justify-between items-center px-4 py-3 text-sm border-t">
                                     <span className="text-muted-foreground">Severity</span>
-                                    <SeverityBadge severity={detailRow?.severity} />
+                                    <SeverityBadge severity={props.detailRow?.severity} />
                                 </div>
                                 <div className="flex justify-between items-center px-4 py-3 text-sm border-t">
                                     <span className="text-muted-foreground">Anomaly Score</span>
-                                    <span className="font-medium font-mono">{detailRow?.anomalyScore}</span>
+                                    <span className="font-medium font-mono">{props.detailRow?.anomalyScore}</span>
                                 </div>
                                 <div className="flex justify-between items-center px-4 py-3 text-sm border-t">
                                     <span className="text-muted-foreground">Timestamp</span>
-                                    <span className="font-medium">{formatTimeStampReadable(detailRow?.timestamp)}</span>
+                                    <span className="font-medium">{formatTimeStampReadable(props.detailRow?.timestamp)}</span>
                                 </div>
                                 <div className="flex justify-between items-center px-4 py-3 text-sm border-t">
                                     <span className="text-muted-foreground">Latency</span>
-                                    <span className="font-medium">{detailRow?.latency} ms</span>
+                                    <span className="font-medium">{props.detailRow?.latency} ms</span>
                                 </div>
                             </div>
                         </div>

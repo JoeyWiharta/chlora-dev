@@ -9,10 +9,21 @@ import "swiper/css/pagination"
 import { useRef, useEffect, useState } from "react"
 import { formatTimeStampFull } from "@/components/common/Regex"
 import { ToasterCustom } from "@/components/common/ToasterCustom"
+import GraphModal from "./GraphModal"
 
 const PotCard = (props) => {
     const potList = props.potData ?? []
     const swiperRef = useRef(null)
+
+    // --------------- Modal View Detail --------------- //
+    const [modalOpen, setModalOpen] = useState(false)
+    const [selectedPot, setSelectedPot] = useState(null)
+
+    const handleOpenModal = (pot) => {
+        setSelectedPot(pot)
+        setModalOpen(true)
+    }
+    // --------------- Modal View Detail --------------- //
 
     const batteryIcon = (level) => {
         if (level <= 20) return (
@@ -177,7 +188,7 @@ const PotCard = (props) => {
                                         size="lg"
                                         variant="outline"
                                         className="w-full justify-between"
-                                        onClick={() => ToasterCustom.warning("Feature will be available soon")}
+                                        onClick={() => handleOpenModal(pot)}
                                     >
                                         View Detail
                                         <ChevronRight size={14} />
@@ -189,6 +200,12 @@ const PotCard = (props) => {
                     )
                 })}
             </Swiper>
+
+            <GraphModal
+                modalOpen={modalOpen}
+                setModalOpen={setModalOpen}
+                potData={selectedPot}
+            />
         </div>
     )
 }
