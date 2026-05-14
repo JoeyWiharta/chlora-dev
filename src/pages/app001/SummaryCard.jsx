@@ -292,22 +292,6 @@ const SummaryCard = (props) => {
                             </span>
                         </div>
                     </div>
-
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                variant="outline"
-                                size="icon-sm"
-                                className="shrink-0"
-                                onClick={() => ToasterCustom.warning("Feature will be available soon")}
-                            >
-                                <ChevronRight size={16} />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <span className="text-xs">View More</span>
-                        </TooltipContent>
-                    </Tooltip>
                 </CardContent>
             </Card>
         </div>

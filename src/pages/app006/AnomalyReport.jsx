@@ -14,6 +14,8 @@ import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import PopupAnomalyDetail from "./PopupAnomalyDetail";
 
 const SEVERITY_OPTIONS = [
     { value: "LOW", label: "Low" },
@@ -31,14 +33,14 @@ const AnomalyReport = () => {
     const [potSelected, setPotSelected] = useState("")
     const [potOption, setPotOption] = useState([])
     const [dateRange, setDateRange] = useState({ from: new Date(), to: new Date() })
-    const [selectedRow, setSelectedRow] = useState(null)
     const [severitySelected, setSeveritySelected] = useState("")
-    const [drawerOpen, setDrawerOpen] = useState(false)
+    const [detailRow, setDetailRow] = useState(null)
+    const [modalOpen, setModalOpen] = useState(false)
 
     // ------------------------ Function Drawer ------------------------ //
-    const handleOpenDrawer = (row) => {
-        setSelectedRow(row)
-        setDrawerOpen(true)
+    const handleOpenModal = (row) => {
+        setDetailRow(row)
+        setModalOpen(true)
     }
     // ------------------------ Function Drawer ------------------------ //
 
@@ -177,7 +179,7 @@ const AnomalyReport = () => {
             formatter: (cellContent, dailyAnomalyData) => (
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon-sm" onClick={() => handleOpenDrawer(dailyAnomalyData)}>
+                        <Button variant="outline" size="icon-sm" onClick={() => handleOpenModal(dailyAnomalyData)}>
                             <Eye size={14} />
                         </Button>
                     </TooltipTrigger>
@@ -296,20 +298,26 @@ const AnomalyReport = () => {
                 </Card>
             </div>
 
-            <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-                <DrawerContent className="max-h-[90vh]">
-                    <DrawerHeader>
-                        <DrawerTitle>Anomaly Detail</DrawerTitle>
+            <PopupAnomalyDetail
+                modalOpen={modalOpen}
+                detailRow={detailRow}
+                setModalOpen={setModalOpen}
+            />
+
+            {/* <Dialog open={drawerOpen} onOpenChange={setDrawerOpen}>
+                <DialogContent className="overflow-y-auto w-[90vw] max-w-[90vw] max-h-[90vh]">
+                    <DialogHeader>
+                        <DialogTitle>Anomaly Detail</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="flex flex-col gap-4">
+
                         <div className="flex flex-col items-center gap-1 mt-1">
                             <span className="font-medium">{selectedRow?.potName}</span>
                             <Badge variant="outline" className="text-xs text-muted-foreground w-fit">
                                 {selectedRow?.deviceName}
                             </Badge>
                         </div>
-                    </DrawerHeader>
-
-                    <div className="px-4 pb-8 flex flex-col gap-4 overflow-y-auto">
-
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                             <div className="flex items-center gap-3 bg-muted/70 rounded-xl p-3">
                                 <div className="rounded-lg bg-warning/10 p-1.5">
@@ -384,8 +392,8 @@ const AnomalyReport = () => {
                         </div>
 
                     </div>
-                </DrawerContent>
-            </Drawer>
+                </DialogContent>
+            </Dialog> */}
 
         </RootPageCustom>
     );
