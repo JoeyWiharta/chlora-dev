@@ -12,12 +12,7 @@ import { ToasterCustom } from "@/components/common/ToasterCustom";
 
 const SummaryCard = (props) => {
 
-    // Update Timestamp every minutes
-    const [tickTime, setTickTime] = useState(0)
-    useEffect(() => {
-        const interval = setInterval(() => setTickTime(t => t + 1), 60000)
-        return () => clearInterval(interval)
-    }, [])
+
 
     // Pot Overview Memo
     const potOverviewData = useMemo(() => {
@@ -288,7 +283,7 @@ const SummaryCard = (props) => {
                         <div className="flex flex-col">
                             <span className="text-sm text-muted-foreground">Time</span>
                             <span>
-                                {formatTimeStampFull(latestAnomalyData.latestTime ?? "-", tickTime)}
+                                {formatTimeStampFull(latestAnomalyData.latestTime ?? "-", props.tickTime)}
                             </span>
                         </div>
                     </div>

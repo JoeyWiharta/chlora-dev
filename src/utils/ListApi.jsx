@@ -45,4 +45,4 @@ export const subscribeNotificationSse = () => managementSse("/notifications/subs
 
 // Dashboard
 export const subscribeDashboardSse = () => managementSse("/dashboard/subscribe")
-
+export const getGraph = (params) => management.get("/dashboard/sensor-history", { params });

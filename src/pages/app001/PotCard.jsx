@@ -15,16 +15,6 @@ const PotCard = (props) => {
     const potList = props.potData ?? []
     const swiperRef = useRef(null)
 
-    // --------------- Modal View Detail --------------- //
-    const [modalOpen, setModalOpen] = useState(false)
-    const [selectedPot, setSelectedPot] = useState(null)
-
-    const handleOpenModal = (pot) => {
-        setSelectedPot(pot)
-        setModalOpen(true)
-    }
-    // --------------- Modal View Detail --------------- //
-
     const batteryIcon = (level) => {
         if (level <= 20) return (
             <div className="rounded-lg bg-danger/10 p-1.5">
@@ -42,13 +32,6 @@ const PotCard = (props) => {
             </div>
         )
     }
-
-    // Update Timestamp every minutes
-    const [tickTime, setTickTime] = useState(0)
-    useEffect(() => {
-        const interval = setInterval(() => setTickTime(t => t + 1), 60000)
-        return () => clearInterval(interval)
-    }, [])
 
     // Function Pot Status
     const getPotStatus = (pot) => {
@@ -122,7 +105,7 @@ const PotCard = (props) => {
                                     {isMonitored ? (
                                         <div className="flex flex-row items-center gap-1.5 text-muted-foreground">
                                             <Clock size={12} className="shrink-0" />
-                                            <span className="text-xs">Last updated {formatTimeStampFull(pot.lastUpdated, tickTime)?.toLowerCase()}</span>
+                                            <span className="text-xs">Last updated {formatTimeStampFull(pot.lastUpdated, props.tickTime)?.toLowerCase()}</span>
                                         </div>
                                     ) : (
                                         <span className="text-xs text-muted-foreground italic">Never connected</span>
@@ -188,7 +171,7 @@ const PotCard = (props) => {
                                         size="lg"
                                         variant="outline"
                                         className="w-full justify-between"
-                                        onClick={() => handleOpenModal(pot)}
+                                        onClick={() => props.handleOpenGraphModal(pot)}
                                     >
                                         View Detail
                                         <ChevronRight size={14} />
@@ -202,9 +185,10 @@ const PotCard = (props) => {
             </Swiper>
 
             <GraphModal
-                modalOpen={modalOpen}
-                setModalOpen={setModalOpen}
-                potData={selectedPot}
+                graphModal={props.graphModal}
+                setGraphModal={props.setGraphModal}
+                selectedPotDetail={props.selectedPotDetail}
+                handleOpenGraphModal={props.handleOpenGraphModal}
             />
         </div>
     )

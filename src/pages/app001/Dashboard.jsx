@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import RootPageCustom from "../../components/common/RootPageCustom";
 import PotCard from "./PotCard";
 import { subscribeDashboardSse } from "@/utils/ListApi";
 import { useAuth } from "@/context/AuthContext";
 import SummaryCard from "./SummaryCard";
+import GraphModal from "./GraphModal";
 
 const Dashboard = () => {
     const { loginStatus } = useAuth()
@@ -14,6 +15,24 @@ const Dashboard = () => {
     const [weeklyAnomalyData, setWeeklyAnomalyData] = useState([])
     const [latestAnomalyData, setLatestAnomalyData] = useState([])
     const [potData, setPotData] = useState([])
+
+    // -------------------- Graph Modal -------------------- //
+    const [graphModal, setGraphModal] = useState(false)
+    const [selectedPotDetail, setSelectedPotDetail] = useState(null);
+    const handleOpenGraphModal = (row) => {
+        setSelectedPotDetail(row)
+        setGraphModal(true)
+    }
+    // -------------------- Graph Modal -------------------- //
+
+    // -------------------- Increment Time Counter Every Minutes -------------------- //
+    const [tickTime, setTickTime] = useState(0)
+    useEffect(() => {
+        const interval = setInterval(() => setTickTime(t => t + 1), 60000)
+        return () => clearInterval(interval)
+    }, [])
+    // -------------------- Increment Time Counter Every Minutes -------------------- //
+
 
     // -------------------- Listen SSE Subscribe Dashboard -------------------- //
     useEffect(() => {
@@ -61,6 +80,17 @@ const Dashboard = () => {
     }, [dashboardData])
     // -------------------- Sync Every State Based On Dashboard Data Changes -------------------- //
 
+    // -------------------- Sync Data to Graph Modal -------------------- //
+    useEffect(() => {
+        if (!selectedPotDetail) return;
+        const updated = potData.find(p => p.potId === selectedPotDetail.potId);
+        if (updated && JSON.stringify(updated) !== JSON.stringify(selectedPotDetail)) {
+            setSelectedPotDetail(updated);
+        }
+    }, [potData]);
+    // -------------------- Sync Data to Graph Modal -------------------- //
+
+
     return (
         <React.Fragment>
             <RootPageCustom
@@ -74,15 +104,21 @@ const Dashboard = () => {
                             dailyAnomalyData={dailyAnomalyData}
                             weeklyAnomalyData={weeklyAnomalyData}
                             latestAnomalyData={latestAnomalyData}
+                            tickTime={tickTime}
                         />
                     </div>
                     <div className="flex-1 min-h-0">
                         <PotCard
                             potData={potData}
+                            tickTime={tickTime}
+                            handleOpenGraphModal={handleOpenGraphModal}
+                            graphModal={graphModal}
+                            setGraphModal={setGraphModal}
+                            selectedPotDetail={selectedPotDetail}
                         />
                     </div>
-                    
                 </div>
+
             </RootPageCustom >
         </React.Fragment >
     );
