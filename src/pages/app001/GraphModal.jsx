@@ -186,7 +186,6 @@ const GraphModal = (props) => {
                                                 tickLine={false}
                                                 axisLine={false}
                                                 interval="preserveStartEnd"
-                                                height={40}
                                             />
                                             <YAxis
                                                 tick={{ fontSize: 10, fill: "var(--muted-foreground)", dx:-20  }}
@@ -204,7 +203,7 @@ const GraphModal = (props) => {
                                                         stroke={s.color}
                                                         strokeWidth={2}
                                                         dot={false}
-                                                        activeDot={{ r: 3, strokeWidth: 0 }}
+                                                        activeDot={{ r: 4, strokeWidth: 0 }}
                                                     />
                                                 ) : null
                                             )}
