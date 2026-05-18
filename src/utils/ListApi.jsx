@@ -46,3 +46,8 @@ export const subscribeNotificationSse = () => managementSse("/notifications/subs
 // Dashboard
 export const subscribeDashboardSse = () => managementSse("/dashboard/subscribe")
 export const getGraph = (params) => management.get("/dashboard/sensor-history", { params });
+
+// Profile
+export const getProfile = () => management.get("/users/profile");
+export const updateProfile = (res) => management.patch("/users/update-profile", res);
+export const changePassword = (res) => management.patch("/users/change-password", res);

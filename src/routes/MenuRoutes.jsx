@@ -3,8 +3,6 @@ import {
     LayoutDashboard,
     Layers,
     ClipboardList,
-    Headset,
-    CircleAlert
 } from "lucide-react"
 
 const MenuRoutes = [

@@ -35,8 +35,10 @@ import { useThemeMode } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext"
 import { useState } from "react"
 import { capitalizeWords } from "@/components/common/Regex"
+import { useNavigate } from "react-router-dom"
 
 const AppSidebarFooter = (props) => {
+    const navigate = useNavigate()
     const { mode, setMode } = useThemeMode();
     const { logout } = useAuth()
     const { isMobile } = useSidebar()
@@ -97,13 +99,11 @@ const AppSidebarFooter = (props) => {
                         </DropdownMenuLabel>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => navigate("/app000/profile")}
+                            >
                                 <User />
                                 Account Profile
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Bell />
-                                Notifications
                             </DropdownMenuItem>
 
                             <DropdownMenuSub>
