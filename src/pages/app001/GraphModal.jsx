@@ -156,7 +156,7 @@ const GraphModal = (props) => {
                     <DialogDescription>Sensor readings over time</DialogDescription>
                 </DialogHeader>
 
-                <div className="flex flex-col gap-3 flex-1 overflow-hidden">
+                <div className="flex flex-col gap-3 flex-1 overflow-y-auto min-h-0" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
 
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 shrink-0">
                         {SERIES.map((s) => (
@@ -184,7 +184,7 @@ const GraphModal = (props) => {
 
                     <Separator className="shrink-0" />
 
-                    <div className="flex flex-col gap-2 flex-1 overflow-hidden">
+                    <div className="flex flex-col gap-2 flex-1 min-h-0">
 
                         <div className="flex justify-end shrink-0">
                             <ButtonGroup className="bg-muted p-1 rounded-4xl gap-1">
@@ -203,7 +203,7 @@ const GraphModal = (props) => {
                             </ButtonGroup>
                         </div>
 
-                        <div className="rounded-xl border bg-muted/20 p-2 sm:p-4 flex-1 overflow-hidden">
+                        <div className="rounded-xl border bg-muted/20 p-2 sm:p-4 flex-1 min-h-[280px]">
                             {loadingData ? (
                                 <div className="w-full h-full flex items-center justify-center">
                                     <span className="text-sm sm:text-lg text-muted-foreground animate-pulse">Loading data...</span>
@@ -238,7 +238,7 @@ const GraphModal = (props) => {
                                                 tickMargin={16}
                                                 tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
                                                 domain={["auto", "auto"]}
-                                                width={55}
+                                                width={50}
                                             />
 
                                             <ChartTooltip content={<CustomTooltip />} />
@@ -256,35 +256,30 @@ const GraphModal = (props) => {
                                                     />
                                                 ) : null
                                             )}
-
-                                            <ChartLegend
-                                                content={() => (
-                                                    <div className="flex items-center gap-1.5 sm:gap-2 pt-6 flex-wrap justify-center">
-                                                        {SERIES.map((s) => (
-                                                            <Button
-                                                                key={s.key}
-                                                                variant="outline"
-                                                                size="sm"
-                                                                onClick={() => toggleSeries(s.key)}
-                                                                className={`h-6 sm:h-7 text-xs font-medium transition-all px-2 sm:px-3 ${activeLine[s.key]
-                                                                    ? "opacity-100"
-                                                                    : "opacity-40 border-transparent bg-transparent"
-                                                                    }`}
-                                                            >
-                                                                <div
-                                                                    className="h-2 w-2 rounded-full shrink-0"
-                                                                    style={{ background: `var(--color-${s.key})` }}
-                                                                />
-                                                                {chartConfig[s.key]?.label}
-                                                            </Button>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </ChartContainer>
                             )}
+                        </div>
+                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-center pt-1">
+                            {SERIES.map((s) => (
+                                <Button
+                                    key={s.key}
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => toggleSeries(s.key)}
+                                    className={`h-6 sm:h-7 text-xs font-medium transition-all px-2 sm:px-3 ${activeLine[s.key]
+                                        ? "opacity-100"
+                                        : "opacity-40 border-transparent bg-transparent"
+                                        }`}
+                                >
+                                    <div
+                                        className="h-2 w-2 rounded-full shrink-0"
+                                        style={{ background: chartConfig[s.key].color }}
+                                    />
+                                    {chartConfig[s.key]?.label}
+                                </Button>
+                            ))}
                         </div>
                     </div>
                 </div>
