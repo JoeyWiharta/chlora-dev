@@ -141,7 +141,11 @@ const Profile = () => {
                 .required("Old password is required."),
             newPassword: Yup.string()
                 .required("New password is required.")
-                .min(8, "Password must be at least 8 characters.")
+                .min(8, "New password must be at least 8 characters.")
+                .max(64, "New password must not exceed 64 characters.")
+                .matches(/[a-z]/, "New password must contain at least one lowercase letter.")
+                .matches(/[A-Z]/, "New password must contain at least one uppercase letter.")
+                .matches(/[0-9]/, "New password must contain at least one number.")
                 .notOneOf([Yup.ref("oldPassword")], "New password must be different from old password."),
             confirmNewPassword: Yup.string()
                 .required("Please confirm your new password.")
