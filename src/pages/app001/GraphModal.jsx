@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 
 // --------------- Constant Value and Default Value --------------- //
+const DEFAULT_TIME_RANGE = "24h";
+const DEFAULT_ACTIVE_LINE = { temperature: true, humidity: true, soilMoisture: true };
 const TIME_RANGE = [
     { label: "5M", value: "5m" },
     { label: "1H", value: "1h" },
@@ -17,20 +19,47 @@ const TIME_RANGE = [
     { label: "7D", value: "7d" },
 ];
 
-const DEFAULT_TIME_RANGE = "24h";
-const DEFAULT_ACTIVE_LINE = { temperature: true, humidity: true, soilMoisture: true };
+const SERIES = [
+    { key: "temperature", label: "Temperature", unit: "°C", icon: Thermometer, iconClass: "text-warning", bgClass: "bg-warning/10" },
+    { key: "humidity", label: "Humidity", unit: "%", icon: Droplet, iconClass: "text-info", bgClass: "bg-info/10" },
+    { key: "soilMoisture", label: "Soil Moisture", unit: "%", icon: Sprout, iconClass: "text-success", bgClass: "bg-success/10" },
+];
+
+const chartConfig = {
+    temperature: { label: "Temperature", color: "var(--color-warning)", unit: "°C" },
+    humidity: { label: "Humidity", color: "var(--color-info)", unit: "%" },
+    soilMoisture: { label: "Soil Moisture", color: "var(--color-success)", unit: "%" },
+};
 // --------------- Constant Value and Default Value --------------- //
 
 
-const SERIES = [
-    { key: "temperature", label: "Temperature", color: "#f59e0b", unit: "°C", icon: Thermometer, iconClass: "text-warning", bgClass: "bg-warning/10" },
-    { key: "humidity", label: "Humidity", color: "#3b82f6", unit: "%", icon: Droplet, iconClass: "text-info", bgClass: "bg-info/10" },
-    { key: "soilMoisture", label: "Soil Moisture", color: "#22c55e", unit: "%", icon: Sprout, iconClass: "text-success", bgClass: "bg-success/10" },
-];
+// --------------- Custom Tooltip — di luar komponen agar tidak re-render --------------- //
+const CustomTooltip = ({ active, payload, label }) => {
+    if (!active || !payload?.length) return null;
+    return (
+        <div className="rounded-lg border bg-background px-3 py-2 shadow-md text-xs flex flex-col gap-1.5 min-w-40">
+            <span className="font-medium text-foreground">{label}</span>
+            {payload.map((entry) => (
+                <div key={entry.dataKey} className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-1.5">
+                        <div
+                            className="h-2 w-2 rounded-full shrink-0"
+                            style={{ background: `var(--color-${entry.dataKey})` }}
+                        />
+                        <span className="text-muted-foreground">
+                            {chartConfig[entry.dataKey]?.label}
+                        </span>
+                    </div>
+                    <span className="font-semibold tabular-nums">
+                        {entry.value}{chartConfig[entry.dataKey]?.unit}
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
+};
+// --------------- Custom Tooltip --------------- //
 
-const chartConfig = Object.fromEntries(
-    SERIES.map(s => [s.key, { label: s.label, color: s.color }])
-);
 
 const GraphModal = (props) => {
     const [selectedTimeRange, setSelectedTimeRange] = useState(DEFAULT_TIME_RANGE);
@@ -46,7 +75,6 @@ const GraphModal = (props) => {
             setGraphData([]);
         }
     }, [props.graphModal]);
-    // --------------- Reset State On Modal Open --------------- //
 
     // --------------- Fetch Data --------------- //
     useEffect(() => {
@@ -69,17 +97,15 @@ const GraphModal = (props) => {
             setLoadingData(false);
         }
     };
-    // --------------- Fetch Data --------------- //
 
-    // --------------- Function Battery Icon --------------- //
+    // --------------- Battery Icon --------------- //
     const batteryIcon = (level) => {
         if (level <= 20) return <div className="rounded-lg bg-danger/10 p-1.5"><BatteryLow size={16} className="text-danger" /></div>;
         if (level <= 50) return <div className="rounded-lg bg-warning/10 p-1.5"><BatteryMedium size={16} className="text-warning" /></div>;
         return <div className="rounded-lg bg-success/10 p-1.5"><BatteryFull size={16} className="text-success" /></div>;
     };
-    // --------------- Function Battery Icon --------------- //
 
-    // --------------- Toggle Line Series --------------- //
+    // --------------- Toggle Line --------------- //
     const toggleSeries = (key) => {
         setActiveLine((prev) => {
             const activeCount = Object.values(prev).filter(Boolean).length;
@@ -87,79 +113,41 @@ const GraphModal = (props) => {
             return { ...prev, [key]: !prev[key] };
         });
     };
-    // --------------- Toggle Line Series --------------- //
-
-
-    // --------------- Custom Tooltip --------------- //
-    const CustomTooltip = ({ active, payload, label }) => {
-        if (!active || !payload?.length) return null;
-        return (
-            <div className="rounded-lg border bg-background px-3 py-2 shadow-md text-xs flex flex-col gap-1.5">
-                <span className="font-medium text-foreground">{label}</span>
-                {payload.map((entry) => {
-                    const series = SERIES.find(s => s.key === entry.dataKey);
-                    return (
-                        <div key={entry.dataKey} className="flex items-center justify-between gap-4">
-                            <div className="flex items-center gap-1.5">
-                                <div className="h-2 w-2 rounded-full shrink-0" style={{ background: entry.color }} />
-                                <span className="text-muted-foreground">{series?.label}</span>
-                            </div>
-                            <span className="font-semibold tabular-nums">{entry.value}{series?.unit}</span>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
-    // --------------- Custom Tooltip --------------- //
 
     return (
         <Dialog open={props.graphModal} onOpenChange={props.setGraphModal}>
             <DialogContent
-                className="flex flex-col overflow-hidden"
-                style={{ width: "90vw", maxWidth: "90vw", height: "90vh", maxHeight: "90vh" }}
+                className="flex flex-col overflow-hidden p-4 sm:p-6"
+                style={{ width: "95vw", maxWidth: "95vw", height: "95vh", maxHeight: "95vh" }}
             >
-                <DialogHeader className="flex flex-col gap-1 shrink-0">
+                <DialogHeader className="shrink-0">
                     <DialogTitle>{props.selectedPotDetail?.potName}</DialogTitle>
                     <DialogDescription>Sensor readings over time</DialogDescription>
                 </DialogHeader>
 
-                <div className="flex flex-col gap-4 flex-1 overflow-hidden">
+                <div className="flex flex-col gap-3 flex-1 overflow-hidden">
+
+                    {/* Stat Cards */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 shrink-0">
-                        <div className="flex items-center gap-3 bg-muted/40 rounded-xl p-3 border">
-                            <div className="rounded-lg bg-warning/10 p-1.5 shrink-0">
-                                <Thermometer size={16} className="text-warning" />
+                        {SERIES.map((s) => (
+                            <div key={s.key} className="flex items-center gap-2 sm:gap-3 bg-muted/40 rounded-xl p-2.5 sm:p-3 border">
+                                <div className={`rounded-lg ${s.bgClass} p-1.5 shrink-0`}>
+                                    <s.icon size={16} className={s.iconClass} />
+                                </div>
+                                <div className="flex flex-col gap-0.5 min-w-0">
+                                    <span className="text-xs sm:text-sm font-semibold">
+                                        {props.selectedPotDetail?.[s.key]}{s.unit}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground truncate">{s.label}</span>
+                                </div>
                             </div>
-                            <div className="flex flex-col gap-0.5 min-w-0">
-                                <span className="text-sm font-semibold">{props.selectedPotDetail?.temperature}°C</span>
-                                <span className="text-xs text-muted-foreground truncate">Temperature</span>
-                            </div>
-                        </div>
+                        ))}
 
-                        <div className="flex items-center gap-3 bg-muted/40 rounded-xl p-3 border">
-                            <div className="rounded-lg bg-info/10 p-1.5 shrink-0">
-                                <Droplet size={16} className="text-info" />
-                            </div>
-                            <div className="flex flex-col gap-0.5 min-w-0">
-                                <span className="text-sm font-semibold">{props.selectedPotDetail?.humidity}%</span>
-                                <span className="text-xs text-muted-foreground truncate">Humidity</span>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 bg-muted/40 rounded-xl p-3 border">
-                            <div className="rounded-lg bg-success/10 p-1.5 shrink-0">
-                                <Sprout size={16} className="text-success" />
-                            </div>
-                            <div className="flex flex-col gap-0.5 min-w-0">
-                                <span className="text-sm font-semibold">{props.selectedPotDetail?.soilMoisture}%</span>
-                                <span className="text-xs text-muted-foreground truncate">Soil Moisture</span>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-3 bg-muted/40 rounded-xl p-3 border">
+                        {/* Battery card */}
+                        <div className="flex items-center gap-2 sm:gap-3 bg-muted/40 rounded-xl p-2.5 sm:p-3 border">
                             {batteryIcon(props.selectedPotDetail?.battery)}
                             <div className="flex flex-col gap-0.5 min-w-0">
-                                <span className="text-sm font-semibold">{props.selectedPotDetail?.battery}%</span>
+                                <span className="text-xs sm:text-sm font-semibold">{props.selectedPotDetail?.battery}%</span>
                                 <span className="text-xs text-muted-foreground truncate">Battery</span>
                             </div>
                         </div>
@@ -167,9 +155,11 @@ const GraphModal = (props) => {
 
                     <Separator className="shrink-0" />
 
-                    <div className="flex flex-col gap-3 flex-1 overflow-hidden">
+                    {/* Chart Section */}
+                    <div className="flex flex-col gap-2 flex-1 overflow-hidden">
 
-                        <div className="flex flex-row justify-end shrink-0">
+                        {/* Time Range Selector */}
+                        <div className="flex justify-end shrink-0">
                             <ButtonGroup className="bg-muted p-1 rounded-4xl gap-1">
                                 {TIME_RANGE.map((range) => (
                                     <Button
@@ -177,7 +167,8 @@ const GraphModal = (props) => {
                                         variant={selectedTimeRange === range.value ? "default" : "ghost"}
                                         size="sm"
                                         onClick={() => setSelectedTimeRange(range.value)}
-                                        className={`h-6 text-xs font-medium rounded-4xl! ${selectedTimeRange !== range.value && "text-muted-foreground hover:text-foreground"}`}
+                                        className={`h-6 text-xs font-medium rounded-4xl! px-2 sm:px-3 ${selectedTimeRange !== range.value && "text-muted-foreground hover:text-foreground"
+                                            }`}
                                     >
                                         {range.label}
                                     </Button>
@@ -185,78 +176,88 @@ const GraphModal = (props) => {
                             </ButtonGroup>
                         </div>
 
-                        <div className="rounded-xl border bg-muted/20 p-4 flex-1 overflow-hidden">
+                        {/* Chart Area */}
+                        <div className="rounded-xl border bg-muted/20 p-2 sm:p-4 flex-1 overflow-hidden">
+                            {loadingData ? (
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <span className="text-sm sm:text-lg text-muted-foreground animate-pulse">Loading data...</span>
+                                </div>
+                            ) : graphData.length === 0 ? (
+                                <div className="w-full h-full flex items-center justify-center">
+                                    <span className="text-sm sm:text-lg text-muted-foreground">No data available</span>
+                                </div>
+                            ) : (
+                                <ChartContainer config={chartConfig} className="h-full w-full">
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <LineChart
+                                            data={graphData}
+                                            margin={{ top: 8, right: 8, left: 0, bottom: 8 }}
+                                        >
+                                            <CartesianGrid vertical={false} />
 
-                            {loadingData ?
-                                (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <span className="text-lg text-muted-foreground animate-pulse">Loading data...</span>
-                                    </div>
-                                ) : graphData.length === 0 ?
-                                    (
-                                        <div className="w-full h-full flex items-center justify-center">
-                                            <span className="text-lg text-muted-foreground">No data available</span>
-                                        </div>
-                                    ) :
-                                    (
-                                        <ChartContainer config={chartConfig} className="h-full w-full">
-                                            <ResponsiveContainer width="100%" height="100%">
+                                            <XAxis
+                                                dataKey="time"
+                                                tickLine={false}
+                                                axisLine={false}
+                                                tickMargin={16}
+                                                minTickGap={40}
+                                                tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                                                interval="preserveStartEnd"
+                                            />
 
-                                                <LineChart data={graphData} margin={{ top: 16, right: 24, left: 0, bottom: 8 }}>
-                                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.1)" />
+                                            <YAxis
+                                                tickLine={false}
+                                                axisLine={false}
+                                                tickMargin={16}
+                                                tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
+                                                domain={["auto", "auto"]}
+                                                width={55}
+                                            />
 
-                                                    <XAxis
-                                                        dataKey="time"
-                                                        tick={{ fontSize: 12, fill: "var(--muted-foreground)", dy: 20 }}
-                                                        tickLine={false}
-                                                        axisLine={false}
-                                                        interval="preserveStartEnd"
+                                            <ChartTooltip content={<CustomTooltip />} />
+
+                                            {SERIES.map((s) =>
+                                                activeLine[s.key] ? (
+                                                    <Line
+                                                        key={s.key}
+                                                        type="monotone"
+                                                        dataKey={s.key}
+                                                        stroke={`var(--color-${s.key})`}
+                                                        strokeWidth={2}
+                                                        dot={false}
+                                                        activeDot={{ r: 4, strokeWidth: 0 }}
                                                     />
-                                                    <YAxis
-                                                        tick={{ fontSize: 12, fill: "var(--muted-foreground)", dx: -20 }}
-                                                        tickLine={false}
-                                                        axisLine={false}
-                                                        domain={["auto", "auto"]}
-                                                    />
-                                                    <ChartTooltip content={<CustomTooltip />} />
-                                                    {SERIES.map((s) =>
-                                                        activeLine[s.key] ? (
-                                                            <Line
+                                                ) : null
+                                            )}
+
+                                            <ChartLegend
+                                                content={() => (
+                                                    <div className="flex items-center gap-1.5 sm:gap-2 pt-6 flex-wrap justify-center">
+                                                        {SERIES.map((s) => (
+                                                            <Button
                                                                 key={s.key}
-                                                                type="monotone"
-                                                                dataKey={s.key}
-                                                                stroke={s.color}
-                                                                strokeWidth={2}
-                                                                dot={false}
-                                                                activeDot={{ r: 4, strokeWidth: 0 }}
-                                                            />
-                                                        ) : null
-                                                    )}
-                                                    <ChartLegend
-                                                        content={() => (
-                                                            <div className="flex items-center gap-2 pt-8 flex-wrap justify-center">
-                                                                {SERIES.map((s) => (
-                                                                    <Button
-                                                                        key={s.key}
-                                                                        variant="outline"
-                                                                        size="sm"
-                                                                        onClick={() => toggleSeries(s.key)}
-                                                                        className={`h-7 text-xs font-medium transition-all ${activeLine[s.key]
-                                                                            ? "border-border opacity-100"
-                                                                            : "opacity-40 border-transparent bg-transparent"
-                                                                            }`}
-                                                                    >
-                                                                        <div className="h-2 w-2 rounded-full shrink-0" style={{ background: s.color }} />
-                                                                        {s.label}
-                                                                    </Button>
-                                                                ))}
-                                                            </div>
-                                                        )}
-                                                    />
-                                                </LineChart>
-                                            </ResponsiveContainer>
-                                        </ChartContainer>
-                                    )}
+                                                                variant="outline"
+                                                                size="sm"
+                                                                onClick={() => toggleSeries(s.key)}
+                                                                className={`h-6 sm:h-7 text-xs font-medium transition-all px-2 sm:px-3 ${activeLine[s.key]
+                                                                        ? "opacity-100"
+                                                                        : "opacity-40 border-transparent bg-transparent"
+                                                                    }`}
+                                                            >
+                                                                <div
+                                                                    className="h-2 w-2 rounded-full shrink-0"
+                                                                    style={{ background: `var(--color-${s.key})` }}
+                                                                />
+                                                                {chartConfig[s.key]?.label}
+                                                            </Button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </ChartContainer>
+                            )}
                         </div>
                     </div>
                 </div>
