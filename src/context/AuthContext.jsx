@@ -25,6 +25,14 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("loginStatus", "true");
     };
 
+    const updateUser = (updatedData) => {
+        setUser(prev => {
+            const newUser = { ...prev, ...updatedData };
+            localStorage.setItem("user", JSON.stringify(newUser));
+            return newUser;
+        });
+    };
+
     const logout = async () => {
         try {
             await ToasterCustom.promise(logoutApi(), {
@@ -65,7 +73,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, loginStatus, login, logout, clearAuthState }}>
+        <AuthContext.Provider value={{ user, loginStatus, login, logout, clearAuthState, updateUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -40,10 +40,12 @@ import { useNavigate } from "react-router-dom"
 const AppSidebarFooter = (props) => {
     const navigate = useNavigate()
     const { mode, setMode } = useThemeMode();
-    const { logout } = useAuth()
+    const { logout, user } = useAuth()
     const { isMobile } = useSidebar()
-    const [roleUser, setRoleUser] = useState(props.userData?.role || "")
-    const [nameUser, setNameUser] = useState(props.userData?.name || "")
+
+    const roleUser = user?.role || ""
+    const nameUser = user?.name || ""
+
 
     const initialName = (name) => {
         if (name) {
