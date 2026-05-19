@@ -20,11 +20,11 @@ const Profile = () => {
     const { updateUser, logout } = useAuth()
     const [profileData, setProfileData] = useState({})
     const [loading, setLoading] = useState(false);
+    const [loadingPassword, setLoadingPassword] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [showOldPassword, setShowOldPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [loadingPassword, setLoadingPassword] = useState(false);
 
 
     // --------------------------- Fetch API Profile and Set Default Data to Validation Form --------------------------- //
