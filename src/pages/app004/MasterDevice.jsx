@@ -39,7 +39,7 @@ const MasterDevice = () => {
         {
             page: 1,
             size: 10,
-            sort: "deviceId",
+            sort: "",
             order: "asc",
             search: "",
             status: "",
