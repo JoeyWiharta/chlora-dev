@@ -15,7 +15,7 @@ link.href = SmallIcon
 // const basename = import.meta.env.DEV ? "/chlora/" : "/"
 
 // New basename test
-const basename = "/chlora"
+const basename = "/"
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

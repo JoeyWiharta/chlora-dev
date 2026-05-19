@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
     // base: mode === "development" ? "/chlora/" : "/",
 
     // Test yang baru
-    base: "/chlora/",
+    base: "/",
     plugins: [
       react(),
       tailwindcss(),

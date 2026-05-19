@@ -7,6 +7,14 @@ import {
 
 const MenuRoutes = [
     {
+        path: "/app000/profile",
+        title: "Profile",
+        icon: LayoutDashboard,
+        component: LazyLoadRoutes(() => import("../pages/app000/Profile")),
+        section: "main",
+        hidden: true,
+    },
+    {
         path: "/app001/dashboard",
         title: "Dashboard",
         icon: LayoutDashboard,

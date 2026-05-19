@@ -26,6 +26,7 @@ const AppSidebarContent = () => {
     const { user } = useAuth()
     const userRole = user?.role
     const mainMenu = MenuRoutes
+        .filter(menu => !menu.hidden)
         .filter(menu => menu.section === "main")
         .filter(menu => !menu.role || menu.role.includes(userRole))
     const otherMenu = MenuRoutes
