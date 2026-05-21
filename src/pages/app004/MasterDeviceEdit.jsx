@@ -17,7 +17,7 @@ const MasterDeviceEdit = (props) => {
 
     useEffect(() => {
         if (props.modalEditOpen) {
-                    console.log("Edit Data", props.app004DeviceEditData) // cek isinya
+            console.log("Edit Data", props.app004DeviceEditData) // cek isinya
 
             app004p03ValidInput.resetForm({
                 values: {
@@ -166,6 +166,7 @@ const MasterDeviceEdit = (props) => {
                             <Select
                                 value={app004p03ValidInput.values.status}
                                 onValueChange={(val) => app004p03ValidInput.setFieldValue("status", val)}
+                                disabled={true}
                             >
                                 <SelectTrigger
                                     id="status"
